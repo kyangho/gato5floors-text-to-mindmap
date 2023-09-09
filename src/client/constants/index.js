@@ -1,0 +1,7 @@
+import { ROUTES_CONST } from './routerConst';
+
+export const URL_DISABLE_SEARCH_ROOM_HEADER = [
+  '/blog',
+  ROUTES_CONST.BOOKING_ROOM,
+  ROUTES_CONST.BOOKING_PROCESS
+];

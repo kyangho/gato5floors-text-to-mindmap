@@ -1,0 +1,32 @@
+export const ROUTES_CONST = {
+  HOME: '/home',
+  LOGIN: '/login',
+  ERROR: {
+    404: '/404'
+  },
+  CONTACT: '/contact',
+  DASHBOARD: '/dashboard',
+  EMPLOYEE: '/employee',
+  ADD_EMPLOYEE: '/employee/add',
+  UPDATE_EMPLOYEE: '/employee/update',
+  LIST_GUEST: '/guest',
+  GUEST_DETAILS: '/guest/details',
+  LIST_ROOM: '/room',
+  LIST_ROOM_OCCUPIED: '/room/occupied',
+  LIST_ROOM_AVAILABLE: '/room/available',
+  CHECKOUT_ROOM: '/room/checkout',
+  ADD_ROOM: '/room/add',
+  UPDATE_ROOM: '/room/update',
+  LIST_ROOM_TYPE: '/room/type',
+  ADD_ROOM_TYPE: '/room/type/add',
+  UPDATE_ROOM_TYPE: '/room/type/update',
+  LIST_RESERVATIONS: '/reservation',
+  DETAILS_RESERVATION: '/reservation/details',
+  LIST_AMENITY: '/amenity',
+  LIST_ROOM_CLASS: '/room/class',
+  LIST_BLOG: '/blog',
+  LIST_BLOG_CATEGORY: '/category',
+  LIST_SERVICE: '/service',
+  SERVICE_MANAGER: '/manage/service',
+  LIST_SERVICE_CATEGORY: '/service/category'
+};
