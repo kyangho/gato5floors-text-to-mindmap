@@ -7,7 +7,9 @@ export default function CommonLayout() {
     <>
       <Header />
       <Container>
-        <Outlet />
+        <div className="h-screen">
+          <Outlet />
+        </div>
       </Container>
     </>
   );
