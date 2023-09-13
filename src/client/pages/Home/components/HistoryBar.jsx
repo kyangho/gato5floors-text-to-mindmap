@@ -4,11 +4,11 @@ import { HistoryItem } from './HistoryItem';
 export function HistoryBar({ noteList: noteListProp, onChangeNote }) {
   const [noteList, setNodeList] = useState(noteListProp);
   return (
-    <div className="h-screen">
-      <div className="history-bar__title">
-        <h2>History</h2>
+    <div className="fixed top-20 bottom-4 w-sidebar overflow-auto p-3 bg-white rounded-xl shadow-lg">
+      <div className="text-center">
+        <h2 className="text-2xl font-medium ">History</h2>
       </div>
-      <div className="history-bar__list">
+      <div>
         {noteList.map((item, index) => (
           <HistoryItem
             key={index}

@@ -1,18 +1,18 @@
-import { useState } from 'react';
 export function HistoryItem({ title, icon, onClick, id }) {
-  const [Title, setTitle] = useState(title);
-  const [Avatar, setAvatar] = useState(icon);
-
   return (
     <div
-      className="flex items-center cursor-pointer"
+      className="flex items-center cursor-pointer my-3 p-2 hover:bg-gray-100 duration-150 rounded-xl"
       onClick={() => onClick(id)}
     >
-      <div className="w-8 h-8">
-        <img src={Avatar} alt="avatar" />
+      <div className="w-12 h-12">
+        <img
+          src={icon}
+          alt="avatar"
+          className="h-full aspect-square object-cover rounded-full"
+        />
       </div>
-      <div className="history-item__title ml-4">
-        <h3>{Title}</h3>
+      <div className="ml-2">
+        <h3 className="text-lg ">{title}</h3>
       </div>
     </div>
   );

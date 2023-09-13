@@ -77,17 +77,19 @@ export default function Flow() {
   );
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onNodesDelete={onNodesDelete}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      fitView
-      attributionPosition="top-right"
-    >
-      <Background variant="dots" gap={12} size={1} />
-    </ReactFlow>
+    <div className="h-screen bg-white rounded-xl shadow-xl">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onNodesDelete={onNodesDelete}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        fitView
+        attributionPosition="top-right"
+      >
+        <Background variant="dots" gap={12} size={1} />
+      </ReactFlow>
+    </div>
   );
 }

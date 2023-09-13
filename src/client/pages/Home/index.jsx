@@ -43,13 +43,14 @@ export default function Home() {
     setShowMindmap(!isShowMindmap);
   };
   return (
-    <div className="h-screen flex justify-between">
+    <div className="p-4 bg-gray-200 min-h-screen">
       <HistoryBar noteList={testNoteList} onChangeNote={handleChangeNote} />
-      <div className="h-screen">
+      <div className="ml-sidebar p-4 mt-header">
         <Note
           content={testNoteList[currentNoteId - 1].content}
           key={currentNoteId}
         />
+
         <TaskBar
           isShowMindmap={isShowMindmap}
           onGenerate={handleGenerateMindmap}
