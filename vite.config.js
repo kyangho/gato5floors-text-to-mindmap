@@ -20,7 +20,7 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: false,
+    open: 'http://localhost:3000',
     proxy: process.env.NODE_ENV
   }
 });
