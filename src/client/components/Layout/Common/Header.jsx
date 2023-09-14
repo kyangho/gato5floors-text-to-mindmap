@@ -17,7 +17,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Home', 'About', 'Contact'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function Header() {
@@ -70,7 +70,7 @@ export default function Header() {
               textDecoration: 'none'
             }}
           >
-            LOGO
+            G5NOTATE
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

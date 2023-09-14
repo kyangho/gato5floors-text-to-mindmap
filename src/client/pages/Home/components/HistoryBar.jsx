@@ -6,7 +6,8 @@ export function HistoryBar({
   noteList: noteListProp,
   onChangeNote,
   onCreateNewNote,
-  onDeleteNote
+  onDeleteNote,
+  currentNoteId
 }) {
   const [noteList, setNodeList] = useState(noteListProp);
   return (
@@ -24,6 +25,7 @@ export function HistoryBar({
             icon={item.icon}
             onClick={onChangeNote}
             onDeleteNote={onDeleteNote}
+            active={item.id == currentNoteId}
           />
         ))}
         <AddNoteButton onClick={onCreateNewNote} />

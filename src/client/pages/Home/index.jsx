@@ -70,6 +70,7 @@ export default function Home() {
         onChangeNote={handleChangeNote}
         onCreateNewNote={handleCreateNewNote}
         onDeleteNote={handleDeleteNote}
+        currentNoteId={currentNoteId}
       />
       <div className="ml-sidebar p-4 mt-header">
         <Note
