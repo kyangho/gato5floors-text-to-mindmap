@@ -3,6 +3,6 @@
   "prettier.requireConfig": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascriptreact]": {
-    "editor.defaultFormatter": "redhat.java"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   }
 }

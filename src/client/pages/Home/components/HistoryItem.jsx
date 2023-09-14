@@ -1,4 +1,6 @@
-export function HistoryItem({ title, icon, onClick, id }) {
+import { DeleteNoteButton } from './button/DeleteNoteButton';
+
+export function HistoryItem({ title, icon, onClick, id, onDeleteNote }) {
   return (
     <div
       className="flex items-center cursor-pointer my-3 p-2 hover:bg-gray-100 duration-150 rounded-xl"
@@ -14,6 +16,7 @@ export function HistoryItem({ title, icon, onClick, id }) {
       <div className="ml-2">
         <h3 className="text-lg ">{title}</h3>
       </div>
+      <DeleteNoteButton onClick={onDeleteNote} id={id} />
     </div>
   );
 }
