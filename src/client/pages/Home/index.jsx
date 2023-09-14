@@ -77,7 +77,7 @@ export default function Home() {
           note={
             currentNoteId != -1
               ? noteList.find(item => item.id == currentNoteId)
-              : null
+              : { title: 'Please create a new note', content: '', id: -1 }
           }
           key={currentNoteId}
         />

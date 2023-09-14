@@ -1,10 +1,14 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function Login() {
   const { register, handleSubmit, errors } = useForm();
-  const onSubmit = data => console.log(data);
+  const navigate = useNavigate();
+  const onSubmit = () => {
+    alert('login successfully');
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -56,6 +60,16 @@ export default function Login() {
             >
               Sign in
             </button>
+            <GoogleLogin
+              loginHint="Email"
+              onSuccess={codeResponse => {
+                localStorage.setItem('userToken', codeResponse);
+                navigate('/');
+              }}
+              onError={error => {
+                console.log(error);
+              }}
+            />
           </div>
         </form>
         <p className="text-center">

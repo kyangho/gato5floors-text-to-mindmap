@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { useSelector } from 'react-redux';
@@ -33,8 +33,22 @@ const AppRoutes = () => {
         <Suspense>
           <Routes>
             <Route path="/" element={<CommonLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/home" element={<Home />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
 
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -46,6 +60,11 @@ const AppRoutes = () => {
       </BrowserRouter>
     </IntlProvider>
   );
+};
+
+const ProtectedRoute = ({ children }) => {
+  const userToken = localStorage.getItem('userToken');
+  return userToken ? children : <Navigate to="/login" />;
 };
 
 export default AppRoutes;

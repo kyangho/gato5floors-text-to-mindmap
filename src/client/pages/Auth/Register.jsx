@@ -2,6 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function Register() {
+  const handleRegister = function () {
+    alert('register successfully');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -10,7 +14,7 @@ function Register() {
             Register for an account
           </h2>
         </div>
-        <form className="mt-8 space-y-6">
+        <form className="mt-8 space-y-6" onSubmit={handleRegister}>
           <input type="hidden" name="remember" value="true" />
 
           <div className="rounded-md shadow-sm -space-y-px flex flex-col gap-6">
