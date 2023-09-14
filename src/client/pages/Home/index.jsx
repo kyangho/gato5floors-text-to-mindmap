@@ -74,10 +74,10 @@ export default function Home() {
       />
       <div className="ml-sidebar p-4 mt-header">
         <Note
-          content={
+          note={
             currentNoteId != -1
-              ? noteList.find(item => item.id == currentNoteId).content
-              : 'Create a new note to take notes'
+              ? noteList.find(item => item.id == currentNoteId)
+              : null
           }
           key={currentNoteId}
         />
