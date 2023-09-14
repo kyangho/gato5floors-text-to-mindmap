@@ -8,6 +8,8 @@ import { messages } from '@/i18n';
 import NotFound from '@/pages/NotFound';
 import Home from '@/pages/Home';
 import CommonLayout from '@/components/Layout/Common';
+import Login from '@/pages/Auth/Login';
+import Register from '@/pages/Auth/Register';
 
 const AppRoutes = () => {
   const { locale } = useSelector(state => state.user);
@@ -33,6 +35,10 @@ const AppRoutes = () => {
             <Route path="/" element={<CommonLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
+
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
