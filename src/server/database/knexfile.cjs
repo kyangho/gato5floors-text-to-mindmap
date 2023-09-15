@@ -5,7 +5,7 @@ module.exports = {
     client: 'sqlite3',
     useNullAsDefault: true,
     connection: {
-      filename: './gato.sqlite'
+      filename: path.join(__dirname, '/db/gato.sqlite')
     },
     migrations: {
       directory: path.join(__dirname, 'migrations')

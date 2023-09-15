@@ -11,8 +11,7 @@ coverage
 node_modules
 dist
 dist-ssr
-prisma/db
-prisma/migrations
+database/db/*.sqlite
 *.local
 
 # Editor directories and files

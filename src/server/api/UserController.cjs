@@ -1,7 +1,9 @@
 const User = require('../database/models/user.cjs');
+
 const getUsers = async (req, res) => {
   try {
-    User.fetchAll().then(users => res.status(200).json(users));
+    const users = await User.fetchAll();
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -18,13 +20,11 @@ const getUserById = async (req, res) => {
 const createUser = async (req, res) => {
   const { username } = req.body;
   try {
-    new User({
+    const user = await new user({
       username
-    })
-      .save()
-      .then(saved => {
-        res.status(201).json({ saved });
-      });
+    }).save();
+
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
