@@ -6,9 +6,11 @@ export default function CommonLayout() {
   return (
     <>
       <Header />
-      <Container>
-        <Outlet />
-      </Container>
+      <>
+        <div className="">
+          <Outlet />
+        </div>
+      </>
     </>
   );
 }

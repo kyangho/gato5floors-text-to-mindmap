@@ -6,6 +6,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Container,
   IconButton,
   Menu,
@@ -16,12 +17,14 @@ import {
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Home', 'About', 'Contact'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function Header() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -51,7 +54,7 @@ export default function Header() {
     handleCallApi();
   });
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -70,7 +73,7 @@ export default function Header() {
               textDecoration: 'none'
             }}
           >
-            LOGO
+            G5NOTATE
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -140,7 +143,7 @@ export default function Header() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          {/* <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -168,7 +171,14 @@ export default function Header() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Box> */}
+          <ButtonGroup
+            variant="contained"
+            aria-label="outlined primary button group"
+          >
+            <Button onClick={() => navigate('/login')}>Login</Button>
+            <Button onClick={() => navigate('/register')}>Signin</Button>
+          </ButtonGroup>
         </Toolbar>
       </Container>
     </AppBar>
