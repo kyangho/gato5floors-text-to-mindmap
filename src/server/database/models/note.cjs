@@ -1,10 +1,7 @@
 const db = require('../db.cjs');
 
 module.exports = db.Model.extend({
-  tableName: 'users',
+  tableName: 'notes',
   requireFetch: false,
-  hasTimestamps: true,
-  notes() {
-    return this.hasMany('notes');
-  }
+  hasTimestamps: true
 });

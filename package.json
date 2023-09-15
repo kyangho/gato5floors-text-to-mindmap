@@ -21,6 +21,7 @@
     "test:coverage": "rimraf ./src/config/jest/coverage && npm test -- --coverage",
     "migrate:make": "knex migrate:make --knexfile ./src/server/database/knexfile.cjs",
     "migrate:latest": "knex migrate:latest --knexfile ./src/server/database/knexfile.cjs",
+    "migrate:down": "knex migrate:down --knexfile ./src/server/database/knexfile.cjs",
     "postinstall": "npm run migrate:latest",
     "prepare": "husky install"
   },
@@ -49,8 +50,8 @@
     "react-hook-form": "^7.46.1",
     "react-icons": "4.10.1",
     "react-router-dom": "6.4.3",
-    "sqlite3": "5.1.6",
-    "reactflow": "11.8.3"
+    "reactflow": "11.8.3",
+    "sqlite3": "5.1.6"
   },
   "devDependencies": {
     "@babel/preset-env": "7.20.2",

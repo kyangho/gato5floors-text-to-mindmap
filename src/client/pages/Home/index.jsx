@@ -1,10 +1,13 @@
 import Flow from '@/pages/Home/components/Mindmap';
 import { demoCallApi } from '@/redux/features/demo';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Note } from './components/Note';
+import Note from './components/Note';
 import { HistoryBar } from './components/HistoryBar';
 import { TaskBar } from './components/TaskBar';
+import AxiosInstance from '@/redux/axios';
+import Mermaid from './components/Mermaid';
+import mermaid from 'mermaid';
 
 const testNoteList = [
   {
@@ -23,6 +26,15 @@ const testNoteList = [
 
 export default function Home() {
   const dispatch = useDispatch();
+  const refNote = useRef();
+
+  const [chart, setChart] = useState(`graph TB
+  A[Kawhi Leonard]
+  B[College Basketball]
+  C[NBA Career]
+  
+  A --> B
+  A --> C`);
 
   const handleCallApi = useCallback(async () => {
     const { payload } = await dispatch(demoCallApi());
@@ -61,7 +73,19 @@ export default function Home() {
     setCurrentNoteId(newNoteId);
     setNoteList(newNoteList);
   };
+  const handleGenerateMindMap = useCallback(async () => {
+    const { data } = await AxiosInstance.post('/note/generate', {
+      content: refNote.current.getContent()
+    });
 
+    if (data.result) {
+      console.log(data.result);
+      setChart(data.result);
+    }
+  }, []);
+  useEffect(() => {
+    mermaid.contentLoaded();
+  }, [chart]);
   return (
     <div className="p-4 bg-gray-200 min-h-screen">
       <HistoryBar
@@ -74,6 +98,7 @@ export default function Home() {
       />
       <div className="ml-sidebar p-4 mt-header">
         <Note
+          ref={refNote}
           note={
             currentNoteId != -1
               ? noteList.find(item => item.id == currentNoteId)
@@ -83,11 +108,17 @@ export default function Home() {
         />
 
         <TaskBar
+          onGenerate={handleGenerateMindMap}
           isShowMindmap={isShowMindmap}
-          onGenerate={handleGenerateMindmap}
           onToggleMindmap={handleShowMindmap}
         />
-        {isShowMindmap && <Flow />}
+        {isShowMindmap &&
+          chart &&
+          (() => {
+            console.log(chart);
+            mermaid.contentLoaded();
+            return <div className="mermaid">{chart}</div>;
+          })()}
       </div>
     </div>
   );

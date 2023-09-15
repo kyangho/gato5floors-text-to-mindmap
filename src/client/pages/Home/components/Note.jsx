@@ -1,13 +1,20 @@
 import { Editor } from '@tinymce/tinymce-react';
-import { useRef } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
 
-export function Note({ note }) {
+function Note({ note }, ref) {
   const editorRef = useRef(null);
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
     }
   };
+
+  const handleGetContent = useCallback(() => {
+    return editorRef.current.getContent({ format: 'text' });
+  }, []);
+
+  useImperativeHandle(ref, () => ({ getContent: handleGetContent }), []);
+
   let timeOut = setTimeout(() => {
     callSaveNoteApi(note);
   }, 1000);
@@ -74,3 +81,5 @@ export function Note({ note }) {
 const callSaveNoteApi = async note => {
   console.log('saving');
 };
+
+export default forwardRef(Note);

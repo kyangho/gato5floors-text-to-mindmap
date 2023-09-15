@@ -1,9 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import AxiosInstance from '@/redux/axios';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Register() {
-  const handleRegister = function () {
-    alert('register successfully');
+  const navigate = useNavigate();
+  const { register, handleSubmit, errors } = useForm();
+  const onRegister = async values => {
+    const { data } = await AxiosInstance.post('/user/register', values);
+    if (data) {
+      navigate('/login');
+    }
   };
 
   return (
@@ -14,7 +20,7 @@ function Register() {
             Register for an account
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleRegister}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onRegister)}>
           <input type="hidden" name="remember" value="true" />
 
           <div className="rounded-md shadow-sm -space-y-px flex flex-col gap-6">
@@ -23,6 +29,7 @@ function Register() {
                 Name
               </label>
               <input
+                {...register('name', { required: true })}
                 id="name"
                 name="name"
                 type="text"
@@ -36,6 +43,7 @@ function Register() {
                 Phone
               </label>
               <input
+                {...register('phone', { required: true })}
                 id="phone"
                 name="phone"
                 type="tel"
@@ -49,6 +57,7 @@ function Register() {
                 Email address
               </label>
               <input
+                {...register('email', { required: true })}
                 id="email-address"
                 name="email"
                 type="email"
@@ -62,6 +71,7 @@ function Register() {
                 Password
               </label>
               <input
+                {...register('password', { required: true })}
                 id="password"
                 name="password"
                 type="password"

@@ -1,39 +1,43 @@
 const User = require('../database/models/user.cjs');
 
-const getUsers = async (req, res) => {
+const login = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const users = await User.fetchAll();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
-};
-
-const getUserById = async (req, res) => {
-  try {
-    res.status(200).json();
-  } catch (error) {
-    res.status(404).json({ msg: error.message });
-  }
-};
-
-const createUser = async (req, res) => {
-  const { username } = req.body;
-  try {
-    const user = await new user({
-      username
-    }).save();
-
-    res.status(201).json(user);
+    const user = await User.where({
+      email,
+      password
+    }).fetch();
+    if (user) {
+      res.status(200).json(user.toJSON());
+    } else {
+      res.status(404).json(user);
+    }
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
 };
 
-const updateUser = async (req, res) => {
-  const { name, price } = req.body;
+const register = async (req, res) => {
+  const { name, password, phone, email } = req.body;
   try {
-    res.status(200).json();
+    await new User({
+      name,
+      password,
+      phone,
+      email
+    }).save();
+    res.status(201).json('Success');
+  } catch (error) {
+    res.status(400).json({ msg: error.message });
+  }
+};
+const updateUser = async (req, res) => {
+  const { name, password, phone, email } = req.body;
+  try {
+    const user = await User.forge({
+      email
+    }).save({ name, password, phone }, { method: 'update', patch: true });
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
@@ -41,16 +45,19 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    res.status(200).json();
+    const { email } = req.params;
+    const user = await User.forge({
+      email
+    }).destroy();
+    res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
 };
 
 module.exports = {
-  getUsers,
-  getUserById,
-  createUser,
+  login,
+  register,
   updateUser,
   deleteUser
 };

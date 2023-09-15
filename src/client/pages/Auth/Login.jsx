@@ -1,13 +1,17 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
+import AxiosInstance from '@/redux/axios';
 
 export default function Login() {
   const { register, handleSubmit, errors } = useForm();
   const navigate = useNavigate();
-  const onSubmit = () => {
-    alert('login successfully');
+  const onSubmit = async values => {
+    const { data } = await AxiosInstance.post('/user/login', values);
+    if (data) {
+      localStorage.setItem('userToken', JSON.stringify(data));
+      navigate('/home');
+    }
   };
 
   return (
@@ -26,6 +30,7 @@ export default function Login() {
                 Email address
               </label>
               <input
+                {...register('email', { required: true })}
                 id="email-address"
                 name="email"
                 type="email"
@@ -41,6 +46,7 @@ export default function Login() {
                 Password
               </label>
               <input
+                {...register('password', { required: true })}
                 id="password"
                 name="password"
                 type="password"
