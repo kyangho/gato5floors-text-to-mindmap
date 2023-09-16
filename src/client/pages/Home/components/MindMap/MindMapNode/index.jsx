@@ -19,8 +19,10 @@ function MindMapNode({ id, data }) {
       let charWidth = 9;
       if (data.label.length < 3) {
         charWidth = 12;
-      } else if (data.label.length < 20) {
+      } else if (data.label.length < 14) {
         charWidth = 10;
+      } else {
+        charWidth = 9;
       }
       inputRef.current.style.width = `${data.label.length * charWidth}px`;
     }
