@@ -26,6 +26,8 @@ export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  console.log(payload);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -151,7 +153,8 @@ export default function Header() {
           </Box>
 
           {token ? (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0 }} className="flex items-center gap-3">
+              <Typography>{payload.name}</Typography>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

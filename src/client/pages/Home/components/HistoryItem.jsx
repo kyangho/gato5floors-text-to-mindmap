@@ -24,8 +24,10 @@ export function HistoryItem({
 
   return (
     <div
-      className={`flex items-center justify-between cursor-pointer my-3 p-2  duration-150 rounded-xl ${
-        active ? 'bg-blue-500 hover:bg-blue-600' : 'hover:bg-gray-100'
+      className={`flex items-center justify-between cursor-pointer my-3 p-2  duration-150 rounded-xl  ${
+        active
+          ? 'bg-blue-500 hover:bg-blue-600 text-white'
+          : 'hover:bg-gray-100'
       }`}
       onClick={() => onClick(id)}
     >
@@ -43,7 +45,7 @@ export function HistoryItem({
         </div>
       </div>
       <div className="flex items-center">
-        <ShowHistoryButton onClick={showHistory} />
+        <ShowHistoryButton onClick={showHistory} active={active} />
         <DeleteNoteButton onClick={onDeleteNote} id={id} />
       </div>
     </div>
