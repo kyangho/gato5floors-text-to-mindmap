@@ -8,6 +8,7 @@ export default function Login() {
   const navigate = useNavigate();
   const onSubmit = async values => {
     const { data } = await AxiosInstance.post('/user/login', values);
+
     if (data) {
       localStorage.setItem('userToken', JSON.stringify(data));
       localStorage.setItem('token', `${data.tokenType} ${data.token}`);
