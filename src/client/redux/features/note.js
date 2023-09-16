@@ -13,6 +13,7 @@ export const getNotes = createAsyncThunk(
     try {
       const { data } = await AxiosInstance.get('/note');
       if (data) {
+        console.log(data);
         return data;
       }
     } catch (_error) {
