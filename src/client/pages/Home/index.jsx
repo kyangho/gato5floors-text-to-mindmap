@@ -8,7 +8,7 @@ import AxiosInstance from '@/redux/axios';
 import mermaid from 'mermaid';
 import { getNotes } from '@/redux/features/note';
 import MindMap from './components/MindMap';
-
+import s from './index.module.less';
 const testNoteList = [
   {
     id: 0,
@@ -122,7 +122,10 @@ export default function Home() {
           isShowMindmap={isShowMindmap}
           onToggleMindmap={handleShowMindmap}
         />
-        {isShowMindmap && chart && <MindMap />}
+
+        <div className={s.reactFlowContainer}>
+          <MindMap />
+        </div>
       </div>
     </div>
   );

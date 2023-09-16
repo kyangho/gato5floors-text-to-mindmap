@@ -8,7 +8,6 @@ import DragIcon from './DragIcon';
 function MindMapNode({ id, data }) {
   const inputRef = useRef(null);
   const updateNodeLabel = useStore(state => state.updateNodeLabel);
-
   useEffect(() => {
     setTimeout(() => {
       inputRef.current?.focus({ preventScroll: true });
@@ -17,7 +16,13 @@ function MindMapNode({ id, data }) {
 
   useLayoutEffect(() => {
     if (inputRef.current) {
-      inputRef.current.style.width = `${data.label.length * 8}px`;
+      let charWidth = 9;
+      if (data.label.length < 3) {
+        charWidth = 12;
+      } else if (data.label.length < 20) {
+        charWidth = 10;
+      }
+      inputRef.current.style.width = `${data.label.length * charWidth}px`;
     }
   }, [data.label.length]);
 

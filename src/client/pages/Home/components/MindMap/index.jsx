@@ -42,6 +42,7 @@ function MindMap() {
     selector,
     shallow
   );
+
   const { project } = useReactFlow();
   const connectingNodeId = useRef(null);
 
@@ -116,9 +117,6 @@ function MindMap() {
       fitView
     >
       <Controls showInteractive={false} />
-      <Panel position="top-left" className="header">
-        React Flow Mind Map
-      </Panel>
     </ReactFlow>
   );
 }
