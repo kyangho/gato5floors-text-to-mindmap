@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import ReactFlow, {
   ConnectionLineType,
   useReactFlow,
@@ -14,13 +14,17 @@ import MindMapEdge from './MindMapEdge';
 
 // we need to import the React Flow styles to make it work
 import 'reactflow/dist/style.css';
+import { isEmpty, isObject } from 'lodash';
+import { convertToNodesAndEdges } from '@/utils/mindmap.util';
 
 const selector = state => ({
   nodes: state.nodes,
   edges: state.edges,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
-  addChildNode: state.addChildNode
+  addChildNode: state.addChildNode,
+  set: state.set,
+  get: state.get
 });
 
 const nodeTypes = {
@@ -36,12 +40,10 @@ const nodeOrigin = [0.5, 0.5];
 const connectionLineStyle = { stroke: '#F6AD55', strokeWidth: 3 };
 const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
 
-function MindMap() {
+function MindMap({ generateJsonData }) {
   const store = useStoreApi();
-  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode } = useStore(
-    selector,
-    shallow
-  );
+  const { nodes, edges, onNodesChange, onEdgesChange, addChildNode, set, get } =
+    useStore(selector, shallow);
 
   const { project } = useReactFlow();
   const connectingNodeId = useRef(null);
@@ -99,6 +101,14 @@ function MindMap() {
     },
     [getChildNodePosition]
   );
+
+  useEffect(() => {
+    if (!isEmpty(generateJsonData)) {
+      console.log(generateJsonData);
+      const { edges, nodes } = convertToNodesAndEdges(generateJsonData);
+      set({ edges, nodes });
+    }
+  }, [generateJsonData]);
 
   return (
     <ReactFlow

@@ -15,13 +15,7 @@ export default function Home() {
   const notes = useSelector(({ note: { notes } }) => notes);
   const refNote = useRef();
 
-  const [chart, setChart] = useState(`graph TB
-  A[Kawhi Leonard]
-  B[College Basketball]
-  C[NBA Career]
-  
-  A --> B
-  A --> C`);
+  const [generateJsonData, setGenerateJsonData] = useState({});
 
   const handleCallApi = useCallback(async () => {
     const { payload } = await dispatch(demoCallApi());
@@ -83,13 +77,9 @@ export default function Home() {
     });
 
     if (data.result) {
-      console.log(data.result);
-      setChart(data.result);
+      setGenerateJsonData(data.result);
     }
   }, []);
-  useEffect(() => {
-    mermaid.contentLoaded();
-  }, [chart]);
 
   return (
     <div className="p-4 bg-gray-200 min-h-screen">
@@ -110,7 +100,7 @@ export default function Home() {
         />
 
         <div className={s.reactFlowContainer}>
-          <MindMap />
+          <MindMap generateJsonData={generateJsonData} />
         </div>
       </div>
     </div>
