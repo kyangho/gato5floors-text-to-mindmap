@@ -9,6 +9,10 @@ const getNotes = async (req, res) => {
     const user = await User.where({
       email: parsedToken.email
     }).fetch();
+    if (!user) {
+      res.status(404).json({ msg: 'Cannot not get notes' });
+      return;
+    }
     const notes = await Note.where({ user_id: user.get('id') }).fetchAll();
 
     res.status(200).json(notes);
@@ -36,6 +40,11 @@ const createNote = async (req, res) => {
     const user = await User.where({
       email: parsedToken.email
     }).fetch();
+    if (!user) {
+      res.status(404).json({ msg: 'Cannot not create note' });
+      return;
+    }
+
     const note = await new Note({
       name,
       content,
@@ -52,8 +61,18 @@ const updateNote = async (req, res) => {
   const { id } = req.params;
   const { name, content, chart } = req.body;
   try {
+    const parsedToken = parseJwt(req.headers.authorization);
+    const user = await User.where({
+      email: parsedToken.email
+    }).fetch();
+    if (!user) {
+      res.status(404).json({ msg: 'Cannot not update note' });
+      return;
+    }
+
     const note = await Note.forge({
-      id
+      id,
+      user_id: user.get('id')
     }).save({ name, content, chart }, { method: 'update', patch: true });
     res.status(201).json(note);
   } catch (error) {
@@ -64,8 +83,18 @@ const updateNote = async (req, res) => {
 const deleteNote = async (req, res) => {
   try {
     const { id } = req.params;
+    const parsedToken = parseJwt(req.headers.authorization);
+    const user = await User.where({
+      email: parsedToken.email
+    }).fetch();
+
+    if (!user) {
+      res.status(404).json({ msg: 'Cannot not delete note' });
+      return;
+    }
     const note = await Note.forge({
-      id
+      id,
+      user_id: user.get('id')
     }).destroy();
     res.status(200).json(note);
   } catch (error) {

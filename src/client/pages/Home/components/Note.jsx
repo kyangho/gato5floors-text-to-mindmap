@@ -19,7 +19,7 @@ function Note({ note }, ref) {
     <Editor
       apiKey="jiykzdltudi91hz3l9ckhczhgcijddsc5a0mqishzg9rrz8y"
       onInit={(evt, editor) => (editorRef.current = editor)}
-      initialValue={`<h1>${note?.title || 'New Note'}</h1>` + note?.content}
+      initialValue={note?.content}
       init={{
         height: 500,
         menubar: false,
@@ -53,7 +53,6 @@ function Note({ note }, ref) {
       onEditorChange={() => {
         clearTimeout(timeOut);
         const content = editorRef.current.getContent();
-        note.name = 'New Note';
         note.content = content;
         timeOut = setTimeout(() => {
           callSaveNoteApi(note);

@@ -12,7 +12,7 @@ export const getNotes = createAsyncThunk(
     try {
       const { data } = await AxiosInstance.get('/note');
       if (data) {
-        console.log(data);
+        return data;
       }
     } catch (_error) {
       return rejectWithValue('Có lỗi xảy ra');
@@ -22,15 +22,13 @@ export const getNotes = createAsyncThunk(
 
 const { reducer } = createSlice({
   initialState,
-  name: 'user',
-  reducers: {
-    setUserLocale(state, action) {
-      const { locale } = action.payload;
-      localStorage.setItem('_locale', locale || 'en_US');
-      Object.assign(state, action.payload);
+  name: 'note',
+  reducers: {},
+  extraReducers: {
+    [getNotes.fulfilled]: (state, { error, payload }) => {
+      state.notes = payload;
     }
-  },
-  extraReducers: {}
+  }
 });
 
 export default reducer;
