@@ -1,4 +1,5 @@
 const User = require('../database/models/user.cjs');
+const { encodeJwt } = require('../utils/jwtToken.cjs');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -7,12 +8,24 @@ const login = async (req, res) => {
       email,
       password
     }).fetch();
+
     if (user) {
-      res.status(200).json(user.toJSON());
+      await User.forge({
+        id: user.get('id')
+      }).save(
+        { token: encodeJwt(user.toJSON()) },
+        { method: 'update', patch: true }
+      );
+
+      res.status(200).json({
+        token: encodeJwt(user.toJSON()),
+        tokenType: 'Bearer'
+      });
     } else {
       res.status(404).json(user);
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json({ msg: error.message });
   }
 };

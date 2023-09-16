@@ -9,11 +9,7 @@ export const getBase64 = file =>
 
 export const beforeUpload = file => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-  }
   const isLt20M = file.size / 1024 / 1024 < 20;
-  if (!isLt20M) {
-  }
   return isJpgOrPng && isLt20M;
 };
 

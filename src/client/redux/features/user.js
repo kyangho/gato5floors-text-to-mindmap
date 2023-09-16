@@ -1,5 +1,5 @@
+import parseJwt from '@/utils/jwtToken';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import parseJwt from '../../utils/jwtToken';
 
 const initialState = {
   user: {},
