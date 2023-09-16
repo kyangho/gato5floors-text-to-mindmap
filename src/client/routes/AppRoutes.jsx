@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,8 @@ import { messages } from '@/i18n';
 import NotFound from '@/pages/NotFound';
 import Home from '@/pages/Home';
 import CommonLayout from '@/components/Layout/Common';
+import Login from '@/pages/Auth/Login';
+import Register from '@/pages/Auth/Register';
 
 const AppRoutes = () => {
   const { locale } = useSelector(state => state.user);
@@ -31,8 +33,26 @@ const AppRoutes = () => {
         <Suspense>
           <Routes>
             <Route path="/" element={<CommonLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/home" element={<Home />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
@@ -40,6 +60,11 @@ const AppRoutes = () => {
       </BrowserRouter>
     </IntlProvider>
   );
+};
+
+const ProtectedRoute = ({ children }) => {
+  const userToken = localStorage.getItem('userToken');
+  return userToken ? children : <Navigate to="/login" />;
 };
 
 export default AppRoutes;

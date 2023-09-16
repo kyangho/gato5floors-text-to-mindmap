@@ -1,12 +1,10 @@
-import path from 'path';
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import ProductRoute from './routes/ProductRoute.js';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const path = require('path');
+const dotenv = require('dotenv');
+const express = require('express');
+const cors = require('cors');
+const ProductRoute = require('./routes/UserRoute.cjs');
+const NoteRoute = require('./routes/NoteRoute.cjs');
+const db = require('./database/db.cjs');
 
 dotenv.config({
   path: path.resolve(
@@ -24,9 +22,10 @@ app.get('/api/ping', (req, res) => {
   res.send('pong!');
 });
 app.use(ProductRoute);
+app.use(NoteRoute);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 
-export default app;
+module.exports = app;
