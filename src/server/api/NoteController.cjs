@@ -4,6 +4,7 @@ const User = require('../database/models/user.cjs');
 const History = require('../database/models/history.cjs');
 
 const { parseJwt } = require('../utils/jwtToken.cjs');
+const { last, find } = require('lodash');
 
 const getNotes = async (req, res) => {
   try {
@@ -44,11 +45,22 @@ const getNoteById = async (req, res) => {
       id,
       user_id: user.get('id')
     }).fetch({ withRelated: ['history'] });
-    let history = find(note.related('history').toJSON(), { node_id: id });
+
+    let history = find(note.related('history').toJSON(), { id: historyId });
     if (history) {
       note = {
         ...note,
-        content: history.content
+        historyId: history.id,
+        content: history.content,
+        name: history.name
+      };
+    } else {
+      history = last(note.related('history').toJSON());
+      note = {
+        ...note,
+        historyId: history.id,
+        content: history.content,
+        name: history.name
       };
     }
 
