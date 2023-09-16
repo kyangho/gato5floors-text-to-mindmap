@@ -26,11 +26,24 @@ export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  console.log(payload);
+  let payload;
+  if (!token) {
+    payload = null;
+  } else {
+    payload = JSON.parse(atob(token.split('.')[1]));
+  }
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const handleCallApi = useCallback(async () => {
+    const { payload } = await dispatch(demoCallApi());
+
+    console.log(payload);
+  }, []);
+
+  useEffect(() => {
+    handleCallApi();
+  });
 
   const handleOpenNavMenu = event => {
     setAnchorElNav(event.currentTarget);
@@ -53,15 +66,6 @@ export default function Header() {
     navigate('/login');
   };
 
-  const handleCallApi = useCallback(async () => {
-    const { payload } = await dispatch(demoCallApi());
-
-    console.log(payload);
-  }, []);
-
-  useEffect(() => {
-    handleCallApi();
-  });
   return (
     <AppBar position="fixed">
       <Container maxWidth="xl">
@@ -152,7 +156,7 @@ export default function Header() {
             ))}
           </Box>
 
-          {token ? (
+          {payload ? (
             <Box sx={{ flexGrow: 0 }} className="flex items-center gap-3">
               <Typography>{payload.name}</Typography>
               <Tooltip title="Open settings">
@@ -191,10 +195,10 @@ export default function Header() {
           ) : (
             <ButtonGroup
               variant="contained"
-              aria-label="outlined primary button group"
+              aria-label="outlined primary button group "
             >
-              <Button onClick={() => navigate('/login')}>Login</Button>
-              <Button onClick={() => navigate('/register')}>Signin</Button>
+              <Button onClick={() => navigate('/login')}>Sign in</Button>
+              <Button onClick={() => navigate('/register')}>Sign out</Button>
             </ButtonGroup>
           )}
         </Toolbar>
@@ -202,3 +206,7 @@ export default function Header() {
     </AppBar>
   );
 }
+
+export const HeaderNotAuth = () => {
+  return <Header token={false} />;
+};

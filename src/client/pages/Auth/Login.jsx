@@ -68,7 +68,7 @@ export default function Login() {
             >
               Sign in
             </button>
-            <GoogleLogin
+            {/* <GoogleLogin
               loginHint="Email"
               onSuccess={codeResponse => {
                 localStorage.setItem('token', codeResponse.credential);
@@ -77,7 +77,7 @@ export default function Login() {
               onError={error => {
                 console.log(error);
               }}
-            />
+            /> */}
           </div>
         </form>
         <p className="text-center">
