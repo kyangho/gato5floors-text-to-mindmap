@@ -1,6 +1,9 @@
 import AxiosInstance from '@/redux/axios';
+import { getNotes } from '@/redux/features/note';
 import { Editor } from '@tinymce/tinymce-react';
+import { useEffect } from 'react';
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 
 function Note({ note }, ref) {
   const editorRef = useRef(null);
@@ -11,9 +14,29 @@ function Note({ note }, ref) {
 
   useImperativeHandle(ref, () => ({ getContent: handleGetContent }), []);
 
+  const callSaveNoteApi = async note => {
+    if (!note) {
+      return;
+    }
+    const { data, error } = AxiosInstance.patch(`/note/${note.id}`, note);
+    if (error) {
+      return;
+    }
+    if (data) {
+      // dispatch(getNotes());
+      //notification success
+    }
+  };
+
   let timeOut = setTimeout(() => {
     callSaveNoteApi(note);
   }, 1000);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      console.log(editorRef.current.setContent(note.content));
+    }
+  }, []);
 
   return (
     <Editor
@@ -61,16 +84,5 @@ function Note({ note }, ref) {
     />
   );
 }
-
-const callSaveNoteApi = async note => {
-  const { data, error } = AxiosInstance.post('/note', note);
-  if (error) {
-    //notification error
-    return;
-  }
-  if (data) {
-    //notification success
-  }
-};
 
 export default forwardRef(Note);

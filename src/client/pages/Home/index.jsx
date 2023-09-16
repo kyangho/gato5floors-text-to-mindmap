@@ -1,13 +1,14 @@
 import Flow from '@/pages/Home/components/Mindmap';
 import { demoCallApi } from '@/redux/features/demo';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Note from './components/Note';
 import { HistoryBar } from './components/HistoryBar';
 import { TaskBar } from './components/TaskBar';
 import AxiosInstance from '@/redux/axios';
 import Mermaid from './components/Mermaid';
 import mermaid from 'mermaid';
+import { getNotes } from '@/redux/features/note';
 
 const testNoteList = [
   {
@@ -26,6 +27,7 @@ const testNoteList = [
 
 export default function Home() {
   const dispatch = useDispatch();
+  const notes = useSelector(({ note: { notes } }) => notes);
   const refNote = useRef();
 
   const [chart, setChart] = useState(`graph TB
@@ -46,32 +48,46 @@ export default function Home() {
     handleCallApi();
   });
 
-  const [noteList, setNoteList] = useState(testNoteList);
-  const [currentNoteId, setCurrentNoteId] = useState(1);
+  const [currentNoteId, setCurrentNoteId] = useState(0);
+  const [currentNote, setCurrentNote] = useState({});
   const [isShowMindmap, setShowMindmap] = useState(true);
-  const handleChangeNote = id => {
-    setCurrentNoteId(id);
+  const handleChangeNote = async id => {
+    const { data } = await AxiosInstance.get(`/note/${id}`);
+    setCurrentNote(data);
+    setCurrentNoteId(data.id);
   };
   const handleShowMindmap = () => {
     setShowMindmap(!isShowMindmap);
   };
-  const handleCreateNewNote = () => {
+  const handleCreateNewNote = async () => {
     const newNote = {
-      id: noteList.length,
-      title: `Note ${noteList.length}`,
+      name: `Note ${notes.length}`,
       icon: 'https://picsum.photos/200/300',
-      content: 'Content ' + noteList.length
+      content: ''
     };
-    setNoteList([...noteList, newNote]);
-    setCurrentNoteId(newNote.id);
+    const { data } = await AxiosInstance.post('/note', newNote);
+    if (data) {
+      await dispatch(getNotes());
+      console.log(data);
+      setCurrentNoteId(data.id);
+    }
   };
-  const handleDeleteNote = (e, id) => {
+  const handleDeleteNote = async (e, id) => {
     // debugger;
     e.stopPropagation();
-    const newNoteList = noteList.filter(item => item.id !== id);
-    const newNoteId = newNoteList.length == 0 ? -1 : newNoteList[0].id;
-    setCurrentNoteId(newNoteId);
-    setNoteList(newNoteList);
+    const { error } = await AxiosInstance.delete(`/note/${id}`);
+    if (currentNoteId == id) {
+      if (notes.length > 0) {
+        setCurrentNoteId(notes[0].id);
+      }
+    }
+
+    if (notes.length == 0) {
+      setCurrentNoteId(0);
+    }
+    if (!error) {
+      dispatch(getNotes());
+    }
   };
   const handleGenerateMindMap = useCallback(async () => {
     const { data } = await AxiosInstance.post('/note/generate', {
@@ -86,26 +102,19 @@ export default function Home() {
   useEffect(() => {
     mermaid.contentLoaded();
   }, [chart]);
+
   return (
     <div className="p-4 bg-gray-200 min-h-screen">
       <HistoryBar
-        key={noteList}
-        noteList={noteList}
+        key={notes}
+        noteList={notes}
         onChangeNote={handleChangeNote}
         onCreateNewNote={handleCreateNewNote}
         onDeleteNote={handleDeleteNote}
         currentNoteId={currentNoteId}
       />
       <div className="ml-sidebar p-4 mt-header">
-        <Note
-          ref={refNote}
-          note={
-            currentNoteId != -1
-              ? noteList.find(item => item.id == currentNoteId)
-              : { title: 'Please create a new note', content: '', id: -1 }
-          }
-          key={currentNoteId}
-        />
+        <Note ref={refNote} note={currentNote} key={currentNoteId} />
 
         <TaskBar
           onGenerate={handleGenerateMindMap}
