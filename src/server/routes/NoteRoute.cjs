@@ -14,7 +14,7 @@ router.get('/api/note', getNotes);
 router.get('/api/note/:id', getNoteById);
 router.post('/api/note/generate', generateGraph);
 router.post('/api/note', createNote);
-router.patch('/api/note/:id', updateNote);
+router.patch('/api/note', updateNote);
 router.delete('/api/note/:id', deleteNote);
 
 module.exports = router;

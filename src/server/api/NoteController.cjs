@@ -28,10 +28,29 @@ const getNotes = async (req, res) => {
 
 const getNoteById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const note = await Note.where({
-      id
+    const parsedToken = parseJwt(req.headers.authorization);
+    const user = await User.where({
+      email: parsedToken.email
+    }).fetch();
+
+    if (!user) {
+      res.status(404).json({ msg: 'Cannot not create note' });
+      return;
+    }
+
+    const { id, historyId } = req.params;
+
+    let note = await Note.where({
+      id,
+      user_id: user.get('id')
     }).fetch({ withRelated: ['history'] });
+    let history = find(note.related('history').toJSON(), { node_id: id });
+    if (history) {
+      note = {
+        ...note,
+        content: history.content
+      };
+    }
 
     res.status(200).json(note);
   } catch (error) {
@@ -77,7 +96,7 @@ const createNote = async (req, res) => {
 
 const updateNote = async (req, res) => {
   const { noteId, historyId } = req.params;
-  const { name, content, chart } = req.body;
+  const { name, content, mindmap } = req.body;
   try {
     const parsedToken = parseJwt(req.headers.authorization);
 
@@ -101,7 +120,7 @@ const updateNote = async (req, res) => {
     const history = await History.forge({
       id: historyId,
       note_id: note.get('id')
-    }).save({ name, content, chart }, { method: 'update', patch: true });
+    }).save({ name, content, mindmap }, { method: 'update', patch: true });
 
     res.status(201).json(history);
   } catch (error) {

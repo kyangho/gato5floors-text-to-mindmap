@@ -4,7 +4,7 @@ exports.up = function (knex) {
     t.string('note_id').nullable();
     t.string('name').notNullable();
     t.string('content').nullable();
-    t.json('chart').nullable();
+    t.json('mindmap').nullable();
     t.timestamp('created_at').defaultTo(knex.fn.now());
     t.timestamp('updated_at').defaultTo(knex.fn.now());
   });

@@ -31,9 +31,18 @@ export default function Home() {
   const [currentNote, setCurrentNote] = useState({});
   const [isShowMindmap, setShowMindmap] = useState(true);
   const handleChangeNote = async id => {
-    const { data } = await AxiosInstance.get(`/note/${id}`);
+    const { data } = await AxiosInstance.get(
+      `/note/${id}`,
+      currentNote.historyId
+        ? {
+            historyId: currentNote.historyId
+          }
+        : {}
+    );
     setCurrentNote({
       ...data,
+      noteId: data.id,
+      historyId: currentNote.historyId || data.historyId,
       icon: 'https://picsum.photos/200/300'
     });
     setCurrentNoteId(data.id);
@@ -81,9 +90,15 @@ export default function Home() {
     }
   }, []);
   const handleSaveNote = async () => {
-    const { error } = await AxiosInstance.put(`/note/${currentNoteId}`, {
-      content: refNote.current.getContent()
-    });
+    const { error } = await AxiosInstance.patch(
+      `/note`,
+      {
+        content: refNote.current.getContent()
+      },
+      {
+        params: { noteId: currentNote.noteId, historyId: currentNote.historyId }
+      }
+    );
     if (!error) {
       dispatch(getNotes());
     }
