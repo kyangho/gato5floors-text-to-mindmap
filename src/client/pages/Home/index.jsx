@@ -39,6 +39,7 @@ export default function Home() {
           }
         : {}
     );
+    console.log(data);
     setCurrentNote({
       ...data,
       noteId: data.id,
@@ -50,6 +51,7 @@ export default function Home() {
   const handleShowMindmap = () => {
     setShowMindmap(!isShowMindmap);
   };
+
   const handleCreateNewNote = async () => {
     const newNote = {
       name: `Note ${notes.length}`,
@@ -63,6 +65,7 @@ export default function Home() {
       setCurrentNoteId(data.id);
     }
   };
+
   const handleDeleteNote = async (e, id) => {
     // debugger;
     e.stopPropagation();
@@ -80,6 +83,7 @@ export default function Home() {
       dispatch(getNotes());
     }
   };
+
   const handleGenerateMindMap = useCallback(async () => {
     const { data } = await AxiosInstance.post('/note/generate', {
       content: refNote.current.getContent()
@@ -89,6 +93,7 @@ export default function Home() {
       setGenerateJsonData(data.result);
     }
   }, []);
+
   const handleSaveNote = async () => {
     const { error } = await AxiosInstance.patch(
       `/note`,
