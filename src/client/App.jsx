@@ -7,6 +7,7 @@ import './App.module.less';
 import '@/theme/global.less';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import mermaid from 'mermaid';
+import { ReactFlowProvider } from 'reactflow';
 export default function App() {
   mermaid.initialize({
     startOnLoad: true,
@@ -63,9 +64,11 @@ stroke-width: 1;
   const clientSecret = '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';
   return (
     <ReduxProvider store={store}>
-      <GoogleOAuthProvider clientId="349500938765-mr27odoo785td991qek1s2hk83qrtuoe.apps.googleusercontent.com">
-        <AppRoutes />
-      </GoogleOAuthProvider>
+      <ReactFlowProvider>
+        <GoogleOAuthProvider clientId="349500938765-mr27odoo785td991qek1s2hk83qrtuoe.apps.googleusercontent.com">
+          <AppRoutes />
+        </GoogleOAuthProvider>
+      </ReactFlowProvider>
     </ReduxProvider>
   );
 }

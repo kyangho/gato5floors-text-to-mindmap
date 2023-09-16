@@ -40,24 +40,13 @@ function Note({ note }, ref) {
 
   return (
     <Editor
-      apiKey="jiykzdltudi91hz3l9ckhczhgcijddsc5a0mqishzg9rrz8y"
+      apiKey="v9438snmq8yvm2d1nfg8v8w9ktvi5q719oq33uekbo9tt614"
       onInit={(evt, editor) => (editorRef.current = editor)}
       initialValue={note?.content}
       init={{
         height: 500,
         menubar: false,
         icons: 'thin',
-        plugins: [
-          'codesample',
-          'hr',
-          'image',
-          'imagetools',
-          'link',
-          'lists',
-          'checklist',
-          'help',
-          'searchreplace'
-        ],
         toolbar:
           'styles | bold italic underline strikethrough forecolor backcolor | image link codesample hr | bullist numlist checklist| searchreplace | help',
 

@@ -1,4 +1,3 @@
-import Flow from '@/pages/Home/components/Mindmap';
 import { demoCallApi } from '@/redux/features/demo';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,9 +5,9 @@ import Note from './components/Note';
 import { HistoryBar } from './components/HistoryBar';
 import { TaskBar } from './components/TaskBar';
 import AxiosInstance from '@/redux/axios';
-import Mermaid from './components/Mermaid';
 import mermaid from 'mermaid';
 import { getNotes } from '@/redux/features/note';
+import MindMap from './components/MindMap';
 
 const testNoteList = [
   {
@@ -53,7 +52,10 @@ export default function Home() {
   const [isShowMindmap, setShowMindmap] = useState(true);
   const handleChangeNote = async id => {
     const { data } = await AxiosInstance.get(`/note/${id}`);
-    setCurrentNote(data);
+    setCurrentNote({
+      ...data,
+      icon: 'https://picsum.photos/200/300'
+    });
     setCurrentNoteId(data.id);
   };
   const handleShowMindmap = () => {
@@ -107,7 +109,6 @@ export default function Home() {
     <div className="p-4 bg-gray-200 min-h-screen">
       <HistoryBar
         key={notes}
-        noteList={notes}
         onChangeNote={handleChangeNote}
         onCreateNewNote={handleCreateNewNote}
         onDeleteNote={handleDeleteNote}
@@ -121,13 +122,7 @@ export default function Home() {
           isShowMindmap={isShowMindmap}
           onToggleMindmap={handleShowMindmap}
         />
-        {isShowMindmap &&
-          chart &&
-          (() => {
-            console.log(chart);
-            mermaid.contentLoaded();
-            return <div className="mermaid">{chart}</div>;
-          })()}
+        {isShowMindmap && chart && <MindMap />}
       </div>
     </div>
   );

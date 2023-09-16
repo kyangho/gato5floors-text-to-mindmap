@@ -52,7 +52,8 @@
     "react-icons": "4.10.1",
     "react-router-dom": "6.4.3",
     "reactflow": "11.8.3",
-    "sqlite3": "5.1.6"
+    "sqlite3": "5.1.6",
+    "zustand": "4.4.1"
   },
   "devDependencies": {
     "@babel/preset-env": "7.20.2",

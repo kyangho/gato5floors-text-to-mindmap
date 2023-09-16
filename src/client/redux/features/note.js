@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import AxiosInstance from '../axios';
+import { map } from 'lodash';
 
 const initialState = {
   currentNote: {},
@@ -26,7 +27,10 @@ const { reducer } = createSlice({
   reducers: {},
   extraReducers: {
     [getNotes.fulfilled]: (state, { error, payload }) => {
-      state.notes = payload;
+      state.notes = map(payload, note => ({
+        ...note,
+        icon: 'https://picsum.photos/200/300'
+      }));
     }
   }
 });
