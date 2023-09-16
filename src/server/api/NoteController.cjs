@@ -105,13 +105,17 @@ const deleteNote = async (req, res) => {
 const generateGraph = async (req, res) => {
   try {
     const { content } = req.body;
-    console.log('a');
     const { data } = await axios.post(
-      'https://a541-2401-d800-2e50-3b85-af36-2e1d-87b7-436a.ngrok-free.app/v1/generate',
-      { note: content }
+      'http://ai.g5t.tech/v1/generate',
+      {
+        note: content
+      },
+      { timeout: 30000 }
     );
+    console.log(data);
     res.status(200).json(data);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ msg: error.message });
   }
 };
