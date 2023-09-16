@@ -70,7 +70,7 @@ export default function Login() {
             <GoogleLogin
               loginHint="Email"
               onSuccess={codeResponse => {
-                localStorage.setItem('userToken', codeResponse);
+                localStorage.setItem('token', codeResponse.credential);
                 navigate('/');
               }}
               onError={error => {
