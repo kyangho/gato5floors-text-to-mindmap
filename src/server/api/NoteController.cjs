@@ -1,9 +1,16 @@
 const { default: axios } = require('axios');
 const Note = require('../database/models/note.cjs');
+const User = require('../database/models/user.cjs');
+const { parseJwt } = require('../utils/jwtToken.cjs');
 
 const getNotes = async (req, res) => {
   try {
-    const notes = await Note.fetchAll();
+    const parsedToken = parseJwt(req.headers.authorization);
+    const user = await User.where({
+      email: parsedToken.email
+    }).fetch();
+    const notes = await Note.where({ user_id: user.get('id') }).fetchAll();
+
     res.status(200).json(notes);
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -25,9 +32,14 @@ const getNoteById = async (req, res) => {
 const createNote = async (req, res) => {
   const { name, content } = req.body;
   try {
+    const parsedToken = parseJwt(req.headers.authorization);
+    const user = await User.where({
+      email: parsedToken.email
+    }).fetch();
     const note = await new Note({
       name,
-      content
+      content,
+      user_id: user.get('id')
     }).save();
 
     res.status(201).json(note);

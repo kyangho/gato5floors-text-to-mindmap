@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HistoryItem } from './HistoryItem';
 import { AddNoteButton } from './button/AddNoteButton';
+import { useDispatch } from 'react-redux';
+import { getNotes } from '@/redux/features/note';
 
 export function HistoryBar({
   noteList: noteListProp,
@@ -9,7 +11,12 @@ export function HistoryBar({
   onDeleteNote,
   currentNoteId
 }) {
+  const dispatch = useDispatch();
   const [noteList, setNodeList] = useState(noteListProp);
+
+  useEffect(() => {
+    dispatch(getNotes());
+  }, []);
   return (
     <div className="fixed top-20 bottom-4 w-sidebar overflow-auto p-3 bg-white rounded-xl shadow-lg">
       <div className="text-center">
