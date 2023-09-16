@@ -63,7 +63,7 @@ const AppRoutes = () => {
 };
 
 const ProtectedRoute = ({ children }) => {
-  const userToken = localStorage.getItem('userToken');
+  const userToken = localStorage.getItem('token');
   return userToken ? children : <Navigate to="/login" />;
 };
 

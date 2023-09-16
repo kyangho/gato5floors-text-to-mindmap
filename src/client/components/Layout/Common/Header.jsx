@@ -25,9 +25,25 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  let payload;
+  if (!token) {
+    payload = null;
+  } else {
+    payload = JSON.parse(atob(token.split('.')[1]));
+  }
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const handleCallApi = useCallback(async () => {
+    const { payload } = await dispatch(demoCallApi());
+
+    console.log(payload);
+  }, []);
+
+  useEffect(() => {
+    handleCallApi();
+  });
 
   const handleOpenNavMenu = event => {
     setAnchorElNav(event.currentTarget);
@@ -43,16 +59,13 @@ export default function Header() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userToken');
+    setAnchorElUser(null);
+    navigate('/login');
+  };
 
-  const handleCallApi = useCallback(async () => {
-    const { payload } = await dispatch(demoCallApi());
-
-    console.log(payload);
-  }, []);
-
-  useEffect(() => {
-    handleCallApi();
-  });
   return (
     <AppBar position="fixed">
       <Container maxWidth="xl">
@@ -143,44 +156,57 @@ export default function Header() {
             ))}
           </Box>
 
-          {/* <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          {payload ? (
+            <Box sx={{ flexGrow: 0 }} className="flex items-center gap-3">
+              <Typography>{payload.name}</Typography>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map(setting => (
+                  <MenuItem
+                    key={setting}
+                    onClick={
+                      setting == 'Logout' ? handleLogout : handleCloseUserMenu
+                    }
+                  >
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <ButtonGroup
+              variant="contained"
+              aria-label="outlined primary button group "
             >
-              {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box> */}
-          <ButtonGroup
-            variant="contained"
-            aria-label="outlined primary button group"
-          >
-            <Button onClick={() => navigate('/login')}>Login</Button>
-            <Button onClick={() => navigate('/register')}>Signin</Button>
-          </ButtonGroup>
+              <Button onClick={() => navigate('/login')}>Sign in</Button>
+              <Button onClick={() => navigate('/register')}>Sign out</Button>
+            </ButtonGroup>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
+
+export const HeaderNotAuth = () => {
+  return <Header token={false} />;
+};

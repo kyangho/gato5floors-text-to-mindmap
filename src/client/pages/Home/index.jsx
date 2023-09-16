@@ -80,6 +80,14 @@ export default function Home() {
       setGenerateJsonData(data.result);
     }
   }, []);
+  const handleSaveNote = async () => {
+    const { error } = await AxiosInstance.put(`/note/${currentNoteId}`, {
+      content: refNote.current.getContent()
+    });
+    if (!error) {
+      dispatch(getNotes());
+    }
+  };
 
   return (
     <div className="p-4 bg-gray-200 min-h-screen">
@@ -97,6 +105,7 @@ export default function Home() {
           onGenerate={handleGenerateMindMap}
           isShowMindmap={isShowMindmap}
           onToggleMindmap={handleShowMindmap}
+          onSave={handleSaveNote}
         />
 
         <div className={s.reactFlowContainer}>

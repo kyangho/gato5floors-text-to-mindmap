@@ -1,4 +1,7 @@
 import { DeleteNoteButton } from './button/DeleteNoteButton';
+import { ShowHistoryButton } from './button/ShowHistoryButton';
+import { HistoryModal } from './modal/HistoryModal';
+import { useState } from 'react';
 
 export function HistoryItem({
   title,
@@ -8,13 +11,27 @@ export function HistoryItem({
   onDeleteNote,
   active
 }) {
+  const [isShowHistory, setIsShowHistory] = useState(false);
+  const handleCloseModal = () => {
+    console.log('close modal');
+    setIsShowHistory(false);
+  };
+
+  const showHistory = () => {
+    setIsShowHistory(true);
+    console.log('show history');
+  };
+
   return (
     <div
-      className={`flex items-center justify-between cursor-pointer my-3 p-2  duration-150 rounded-xl ${
-        active ? 'bg-blue-500 hover:bg-blue-600' : 'hover:bg-gray-100'
+      className={`flex items-center justify-between cursor-pointer my-3 p-2  duration-150 rounded-xl  ${
+        active
+          ? 'bg-blue-500 hover:bg-blue-600 text-white'
+          : 'hover:bg-gray-100'
       }`}
       onClick={() => onClick(id)}
     >
+      <HistoryModal open={isShowHistory} onClose={handleCloseModal} id={id} />
       <div className="flex items-center">
         <div className="w-12 h-12">
           <img
@@ -27,7 +44,10 @@ export function HistoryItem({
           <h3 className="text-lg ">{title}</h3>
         </div>
       </div>
-      <DeleteNoteButton onClick={onDeleteNote} id={id} />
+      <div className="flex items-center">
+        <ShowHistoryButton onClick={showHistory} active={active} />
+        <DeleteNoteButton onClick={onDeleteNote} id={id} />
+      </div>
     </div>
   );
 }

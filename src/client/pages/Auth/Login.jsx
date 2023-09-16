@@ -8,6 +8,7 @@ export default function Login() {
   const navigate = useNavigate();
   const onSubmit = async values => {
     const { data } = await AxiosInstance.post('/user/login', values);
+
     if (data) {
       localStorage.setItem('userToken', JSON.stringify(data));
       localStorage.setItem('token', `${data.tokenType} ${data.token}`);
@@ -67,16 +68,16 @@ export default function Login() {
             >
               Sign in
             </button>
-            <GoogleLogin
+            {/* <GoogleLogin
               loginHint="Email"
               onSuccess={codeResponse => {
-                localStorage.setItem('userToken', codeResponse);
+                localStorage.setItem('token', codeResponse.credential);
                 navigate('/');
               }}
               onError={error => {
                 console.log(error);
               }}
-            />
+            /> */}
           </div>
         </form>
         <p className="text-center">
