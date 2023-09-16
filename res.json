@@ -1,0 +1,162 @@
+{
+    "edges": [
+        {
+            "id": "8jtyUBwBJplPLETNr0G-s",
+            "source": "0EdrotHkpw5Nfsx6ypBr_",
+            "target": "OGQyt_dncLRrWiBkNYNgF"
+        },
+        {
+            "id": "BvAEVK1yv4lPrkcZGVHen",
+            "source": "OGQyt_dncLRrWiBkNYNgF",
+            "target": "6dQ-KhtwGordwoEVc0mDO"
+        },
+        {
+            "id": "MFA0aamXgsCl4Ep0cLQ6U",
+            "source": "OGQyt_dncLRrWiBkNYNgF",
+            "target": "g3cTOEO4YFWW1y9OvCk5V"
+        },
+        {
+            "id": "-XNcMHhXXlBHvIybszYzT",
+            "source": "0EdrotHkpw5Nfsx6ypBr_",
+            "target": "qIslnQWeIG4y452P068PF"
+        },
+        {
+            "id": "fGTtqYPy9TxXv2O8rDsSD",
+            "source": "qIslnQWeIG4y452P068PF",
+            "target": "dM078UvF0W3dB9sLvJmDM"
+        },
+        {
+            "id": "fvNoXY3xweDT07T0EAzpC",
+            "source": "qIslnQWeIG4y452P068PF",
+            "target": "KMhRry1Df4eQkNgWZzRun"
+        },
+        {
+            "id": "lH4cm0VrQ3M-eV_uFdYpq",
+            "source": "0EdrotHkpw5Nfsx6ypBr_",
+            "target": "0QkA41vn2Y4AZcXZ8Z4xf"
+        },
+        {
+            "id": "GqdQ5kRbt3ZMOIiI3erGZ",
+            "source": "0QkA41vn2Y4AZcXZ8Z4xf",
+            "target": "Hjz8kO3Hos9rJMSgnRksg"
+        }
+    ],
+    "nodes": [
+        {
+            "id": "0EdrotHkpw5Nfsx6ypBr_",
+            "type": "mindmap",
+            "data": {
+                "label": "Mai"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+        },
+        {
+            "id": "OGQyt_dncLRrWiBkNYNgF",
+            "type": "mindmap",
+            "data": {
+                "label": "Thông tin cá nhân"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+            "parentNode": "0EdrotHkpw5Nfsx6ypBr_"
+        },
+        {
+            "id": "6dQ-KhtwGordwoEVc0mDO",
+            "type": "mindmap",
+            "data": {
+                "label": "Xấu gái"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+            "parentNode": "OGQyt_dncLRrWiBkNYNgF"
+        },
+        {
+            "id": "g3cTOEO4YFWW1y9OvCk5V",
+            "type": "mindmap",
+            "data": {
+                "label": "Gọi là Mai dơ Mai bẩn (Lí do: Mai tắm + cả gội đầu trong 1p)"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+            "parentNode": "OGQyt_dncLRrWiBkNYNgF"
+        },
+        {
+            "id": "qIslnQWeIG4y452P068PF",
+            "type": "mindmap",
+            "data": {
+                "label": "Hành vi hàng ngày"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+            "parentNode": "0EdrotHkpw5Nfsx6ypBr_"
+        },
+        {
+            "id": "dM078UvF0W3dB9sLvJmDM",
+            "type": "mindmap",
+            "data": {
+                "label": "Mai nấu cơm cho nhà trừ Ducky hằng sáng"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+            "parentNode": "qIslnQWeIG4y452P068PF"
+        },
+        {
+            "id": "KMhRry1Df4eQkNgWZzRun",
+            "type": "mindmap",
+            "data": {
+                "label": "Mai chửi Ducky là Tró khi Kỳ đi làm về mệt mỏi"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+            "parentNode": "qIslnQWeIG4y452P068PF"
+        },
+        {
+            "id": "0QkA41vn2Y4AZcXZ8Z4xf",
+            "type": "mindmap",
+            "data": {
+                "label": "Tình trạng cảm xúc"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+            "parentNode": "0EdrotHkpw5Nfsx6ypBr_"
+        },
+        {
+            "id": "Hjz8kO3Hos9rJMSgnRksg",
+            "type": "mindmap",
+            "data": {
+                "label": "Rất buồn về Mai"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "dragHandle": ".dragHandle",
+            "parentNode": "0QkA41vn2Y4AZcXZ8Z4xf"
+        }
+    ]
+}
