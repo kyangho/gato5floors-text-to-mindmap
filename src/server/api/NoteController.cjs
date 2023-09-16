@@ -1,6 +1,8 @@
 const { default: axios } = require('axios');
 const Note = require('../database/models/note.cjs');
 const User = require('../database/models/user.cjs');
+const History = require('../database/models/history.cjs');
+
 const { parseJwt } = require('../utils/jwtToken.cjs');
 
 const getNotes = async (req, res) => {
@@ -13,7 +15,10 @@ const getNotes = async (req, res) => {
       res.status(404).json({ msg: 'Cannot not get notes' });
       return;
     }
-    const notes = await Note.where({ user_id: user.get('id') }).fetchAll();
+
+    const notes = await Note.where({ user_id: user.get('id') }).fetchAll({
+      withRelated: ['history']
+    });
 
     res.status(200).json(notes);
   } catch (error) {
@@ -26,7 +31,8 @@ const getNoteById = async (req, res) => {
     const { id } = req.params;
     const note = await Note.where({
       id
-    }).fetch();
+    }).fetch({ withRelated: ['history'] });
+
     res.status(200).json(note);
   } catch (error) {
     res.status(404).json({ msg: error.message });
@@ -40,16 +46,28 @@ const createNote = async (req, res) => {
     const user = await User.where({
       email: parsedToken.email
     }).fetch();
+
     if (!user) {
       res.status(404).json({ msg: 'Cannot not create note' });
       return;
     }
 
-    const note = await new Note({
+    const history = await History.forge({
       name,
-      content,
-      user_id: user.get('id')
+      content
     }).save();
+
+    const note = await Note.forge({
+      user_id: user.get('id'),
+      history_id: history.get('id')
+    }).save();
+
+    history.save(
+      {
+        note_id: note.get('id')
+      },
+      { method: 'update', patch: true }
+    );
 
     res.status(201).json(note);
   } catch (error) {
@@ -58,10 +76,11 @@ const createNote = async (req, res) => {
 };
 
 const updateNote = async (req, res) => {
-  const { id } = req.params;
+  const { noteId, historyId } = req.params;
   const { name, content, chart } = req.body;
   try {
     const parsedToken = parseJwt(req.headers.authorization);
+
     const user = await User.where({
       email: parsedToken.email
     }).fetch();
@@ -70,11 +89,21 @@ const updateNote = async (req, res) => {
       return;
     }
 
-    const note = await Note.forge({
-      id,
+    const note = await Note.where({
+      id: noteId,
       user_id: user.get('id')
+    }).fetch();
+    if (!note) {
+      res.status(404).json({ msg: 'Cannot find note' });
+      return;
+    }
+
+    const history = await History.forge({
+      id: historyId,
+      note_id: note.get('id')
     }).save({ name, content, chart }, { method: 'update', patch: true });
-    res.status(201).json(note);
+
+    res.status(201).json(history);
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
@@ -92,10 +121,12 @@ const deleteNote = async (req, res) => {
       res.status(404).json({ msg: 'Cannot not delete note' });
       return;
     }
-    const note = await Note.forge({
+    const note = await Note.where({
       id,
       user_id: user.get('id')
-    }).destroy();
+    }).fetch({ withRelated: ['history'] });
+
+    note.destroy();
     res.status(200).json(note);
   } catch (error) {
     res.status(400).json({ msg: error.message });

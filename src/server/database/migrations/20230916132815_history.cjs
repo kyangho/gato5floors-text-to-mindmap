@@ -1,7 +1,8 @@
 exports.up = function (knex) {
   return knex.schema.createTable('history', function (t) {
     t.increments('id').primary().unsigned();
-    t.string('note_id').notNullable();
+    t.string('note_id').nullable();
+    t.string('name').notNullable();
     t.string('content').nullable();
     t.json('chart').nullable();
     t.timestamp('created_at').defaultTo(knex.fn.now());

@@ -9,20 +9,6 @@ import mermaid from 'mermaid';
 import { getNotes } from '@/redux/features/note';
 import MindMap from './components/MindMap';
 import s from './index.module.less';
-const testNoteList = [
-  {
-    id: 0,
-    title: 'Note 0',
-    icon: 'https://picsum.photos/200/300',
-    content: 'Content 0'
-  },
-  {
-    id: 1,
-    title: 'Note 1',
-    icon: 'https://picsum.photos/200/300',
-    content: 'Content 1'
-  }
-];
 
 export default function Home() {
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 const { default: axios } = require('axios');
-const History = require('../database/models/note.cjs');
+const History = require('../database/models/history.cjs');
 
 const getHistory = async (req, res) => {
   const { noteId } = req.params;
@@ -26,12 +26,14 @@ const getHistoryById = async (req, res) => {
 };
 
 const createHistory = async (req, res) => {
-  const { content, chart, nodeId } = req.body;
+  const { noteId } = req.params;
+  const { name, content, chart } = req.body;
   try {
     const note = await new History({
+      name,
       content,
       chart,
-      note_id: nodeId
+      note_id: noteId
     }).save();
 
     res.status(201).json(note);
@@ -42,11 +44,11 @@ const createHistory = async (req, res) => {
 
 const updateHistory = async (req, res) => {
   const { id } = req.params;
-  const { content, chart } = req.body;
+  const { name, content, chart } = req.body;
   try {
     const note = await History.forge({
       id
-    }).save({ content, chart }, { method: 'update', patch: true });
+    }).save({ name, content, chart }, { method: 'update', patch: true });
     res.status(201).json(note);
   } catch (error) {
     res.status(400).json({ msg: error.message });

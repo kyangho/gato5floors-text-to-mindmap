@@ -1,11 +1,10 @@
 const db = require('../db.cjs');
 
-module.exports = db.Model.extend({
+module.exports = db.model('history', {
   tableName: 'history',
   requireFetch: false,
   hasTimestamps: true,
-  hidden: ['note_id'],
   notes() {
-    return this.belongsTo('notes');
+    return this.belongsToMany('notes');
   }
 });

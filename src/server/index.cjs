@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const ProductRoute = require('./routes/UserRoute.cjs');
 const NoteRoute = require('./routes/NoteRoute.cjs');
+const HistoryRoute = require('./routes/HistoryRoute.cjs');
 const db = require('./database/db.cjs');
 
 dotenv.config({
@@ -21,6 +22,7 @@ app.use(express.json());
 app.get('/api/ping', (req, res) => {
   res.send('pong!');
 });
+app.use(HistoryRoute);
 app.use(ProductRoute);
 app.use(NoteRoute);
 
