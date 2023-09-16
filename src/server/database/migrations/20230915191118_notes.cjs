@@ -3,8 +3,7 @@ exports.up = function (knex) {
     t.increments('id').primary().unsigned();
     t.string('name').notNullable();
     t.integer('user_id').notNullable();
-    t.string('content').nullable();
-    t.text('chart').nullable();
+    t.integer('history_id').notNullable();
     t.timestamp('created_at').defaultTo(knex.fn.now());
     t.timestamp('updated_at').defaultTo(knex.fn.now());
   });
