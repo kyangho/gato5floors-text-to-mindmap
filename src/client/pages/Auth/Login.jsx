@@ -6,14 +6,8 @@ import AxiosInstance from '@/redux/axios';
 export default function Login() {
   const { register, handleSubmit, errors } = useForm();
   const navigate = useNavigate();
-  const onSubmit = async values => {
-    const { data } = await AxiosInstance.post('/user/login', values);
-
-    if (data) {
-      localStorage.setItem('userToken', JSON.stringify(data));
-      localStorage.setItem('token', `${data.tokenType} ${data.token}`);
-      navigate('/home');
-    }
+  const onSubmit = () => {
+    alert('login successfully');
   };
 
   return (

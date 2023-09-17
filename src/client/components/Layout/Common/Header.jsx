@@ -30,7 +30,7 @@ export default function Header() {
   if (!token) {
     payload = null;
   } else {
-    payload = JSON.parse(atob(token.split('.')[1]));
+    payload = parseJwt(token);
   }
 
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -198,13 +198,29 @@ export default function Header() {
               aria-label="outlined primary button group "
             >
               <Button onClick={() => navigate('/login')}>Sign in</Button>
-              <Button onClick={() => navigate('/register')}>Sign out</Button>
+              <Button onClick={() => navigate('/register')}>Sign up</Button>
             </ButtonGroup>
           )}
         </Toolbar>
       </Container>
     </AppBar>
   );
+}
+
+function parseJwt(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split('')
+      .map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
+
+  return JSON.parse(jsonPayload);
 }
 
 export const HeaderNotAuth = () => {
