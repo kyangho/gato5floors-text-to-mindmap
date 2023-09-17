@@ -238,8 +238,12 @@ const generateGraph = async (req, res) => {
       res.status(404).json({ msg: 'Cannot find note' });
       return;
     }
+    const baseAIUrl =
+      process.env.NODE_ENV === 'server'
+        ? 'http://localhost:3030/v1/generate'
+        : 'http://ai.g5t.tech/v1/generate';
     const { data } = await axios.post(
-      'http://ai.g5t.tech/v1/generate',
+      baseAIUrl,
       {
         note: content
       },
@@ -322,7 +326,12 @@ const generateCompletions = async (req, res) => {
       res.status(404).json({ msg: 'Cannot find note' });
       return;
     }
+    const baseAIUrl =
+      process.env.NODE_ENV === 'server'
+        ? 'http://localhost:3030/v1/generate'
+        : 'http://ai.g5t.tech/v1/generate';
     const { data } = await axios.post(
+      baseAIUrl,
       'http://ai.g5t.tech/v1/completions',
       {
         outline: JSON.stringify(convertNodesEdgesToTree(mindmap))
