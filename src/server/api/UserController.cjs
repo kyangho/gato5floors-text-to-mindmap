@@ -33,12 +33,15 @@ const login = async (req, res) => {
 const register = async (req, res) => {
   const { name, password, phone, email } = req.body;
   try {
-    await new User({
-      name,
-      password,
-      phone,
-      email
-    }).save({ method: 'insert' });
+    await new User().save(
+      {
+        name,
+        password,
+        phone,
+        email
+      },
+      { method: 'insert' }
+    );
     res.status(201).json('Success');
   } catch (error) {
     res.status(400).json({ msg: error.message });
