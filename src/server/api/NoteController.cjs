@@ -189,37 +189,37 @@ const generateGraph = async (req, res) => {
     const { content, id, historyId } = req.body;
 
     const parsedToken = parseJwt(req.headers.authorization);
-    const uuidQueue = getUuid(req.headers.authorization, 3);
-    const fetchQueue = await Queue.where({
-      id: uuidQueue
-    }).fetch();
-    let newQueue = null;
-    const now = new Date();
-    if (fetchQueue) {
-      switch (fetchQueue.get('status')) {
-        case 'generating': {
-          if (now.getTime() - fetchQueue.get('created_at') > 20000) {
-            fetchQueue.destroy();
-          } else {
-            res.status(400).json('GENERATING');
-            return;
-          }
-          break;
-        }
-        case 'done': {
-          fetchQueue.destroy();
-          break;
-        }
-      }
-    } else {
-      newQueue = await new Queue().save(
-        {
-          id: uuidQueue,
-          status: 'generating'
-        },
-        { method: 'insert' }
-      );
-    }
+    // const uuidQueue = getUuid(req.headers.authorization, 3);
+    // const fetchQueue = await Queue.where({
+    //   id: uuidQueue
+    // }).fetch();
+    // let newQueue = null;
+    // const now = new Date();
+    // if (fetchQueue) {
+    //   switch (fetchQueue.get('status')) {
+    //     case 'generating': {
+    //       if (now.getTime() - fetchQueue.get('created_at') > 20000) {
+    //         fetchQueue.destroy();
+    //       } else {
+    //         res.status(400).json('GENERATING');
+    //         return;
+    //       }
+    //       break;
+    //     }
+    //     case 'done': {
+    //       fetchQueue.destroy();
+    //       break;
+    //     }
+    //   }
+    // } else {
+    //   newQueue = await new Queue().save(
+    //     {
+    //       id: uuidQueue,
+    //       status: 'generating'
+    //     },
+    //     { method: 'insert' }
+    //   );
+    // }
 
     const user = await User.where({
       email: parsedToken.email
@@ -259,7 +259,7 @@ const generateGraph = async (req, res) => {
       { method: 'update', patch: true }
     );
 
-    newQueue.destroy();
+    // newQueue.destroy();
 
     res.status(200).json(converted);
   } catch (error) {
@@ -273,37 +273,37 @@ const generateCompletions = async (req, res) => {
     const { mindmap, id, historyId } = req.body;
 
     const parsedToken = parseJwt(req.headers.authorization);
-    const uuidQueue = getUuid(req.headers.authorization, 3);
-    const fetchQueue = await Queue.where({
-      id: uuidQueue
-    }).fetch();
-    let newQueue = null;
-    const now = new Date();
-    if (fetchQueue) {
-      switch (fetchQueue.get('status')) {
-        case 'generating': {
-          if (now.getTime() - fetchQueue.get('created_at') > 20000) {
-            fetchQueue.destroy();
-          } else {
-            res.status(400).json('GENERATING');
-            return;
-          }
-          break;
-        }
-        case 'done': {
-          fetchQueue.destroy();
-          break;
-        }
-      }
-    } else {
-      newQueue = await new Queue().save(
-        {
-          id: uuidQueue,
-          status: 'generating'
-        },
-        { method: 'insert' }
-      );
-    }
+    // const uuidQueue = getUuid(req.headers.authorization, 3);
+    // const fetchQueue = await Queue.where({
+    //   id: uuidQueue
+    // }).fetch();
+    // let newQueue = null;
+    // const now = new Date();
+    // if (fetchQueue) {
+    //   switch (fetchQueue.get('status')) {
+    //     case 'generating': {
+    //       if (now.getTime() - fetchQueue.get('created_at') > 20000) {
+    //         fetchQueue.destroy();
+    //       } else {
+    //         res.status(400).json('GENERATING');
+    //         return;
+    //       }
+    //       break;
+    //     }
+    //     case 'done': {
+    //       fetchQueue.destroy();
+    //       break;
+    //     }
+    //   }
+    // } else {
+    //   newQueue = await new Queue().save(
+    //     {
+    //       id: uuidQueue,
+    //       status: 'generating'
+    //     },
+    //     { method: 'insert' }
+    //   );
+    // }
 
     const user = await User.where({
       email: parsedToken.email
@@ -340,7 +340,7 @@ const generateCompletions = async (req, res) => {
       { method: 'update', patch: true }
     );
 
-    newQueue.destroy();
+    // newQueue.destroy();
 
     res.status(200).json({
       content: data.result

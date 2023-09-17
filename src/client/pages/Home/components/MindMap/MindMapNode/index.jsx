@@ -36,12 +36,7 @@ function MindMapNode({ id, data }) {
 
   return (
     <>
-      <div
-        className="inputWrapper"
-        onFocus={e => {
-          console.log(e);
-        }}
-      >
+      <div className="inputWrapper">
         <div
           className="dragHandle"
           style={{

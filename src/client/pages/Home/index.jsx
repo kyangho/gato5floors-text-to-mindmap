@@ -90,7 +90,6 @@ export default function Home() {
       id: currentNote.id,
       historyId: currentNote.historyId
     });
-    console.log(data);
     if (data) {
       await dispatch(
         fetchOneNote({

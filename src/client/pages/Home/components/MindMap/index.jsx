@@ -105,7 +105,19 @@ function MindMap({ generateJsonData }) {
       set({ edges, nodes });
       return;
     }
-    set({ edges: [], nodes: [] });
+    set({
+      edges: [],
+      nodes: [
+        {
+          id: 'root',
+          type: 'mindmap',
+          data: { label: 'Root' },
+          position: { x: 0, y: 0 },
+          dragHandle: '.dragHandle',
+          parentNode: null
+        }
+      ]
+    });
   }, [generateJsonData]);
   return (
     <ReactFlow
