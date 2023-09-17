@@ -6,10 +6,10 @@ function Register() {
   const navigate = useNavigate();
   const { register, handleSubmit, errors } = useForm();
   const onRegister = async values => {
-    const { data } = await AxiosInstance.post('/user/register', values);
-    if (data) {
+    try {
+      await AxiosInstance.post('/user/register', values);
       navigate('/login');
-    }
+    } catch (_error) {}
   };
 
   return (
