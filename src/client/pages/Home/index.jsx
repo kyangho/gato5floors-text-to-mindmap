@@ -9,33 +9,13 @@ import mermaid from 'mermaid';
 import { getNotes } from '@/redux/features/note';
 import MindMap from './components/MindMap';
 import s from './index.module.less';
-const testNoteList = [
-  {
-    id: 0,
-    title: 'Note 0',
-    icon: 'https://picsum.photos/200/300',
-    content: 'Content 0'
-  },
-  {
-    id: 1,
-    title: 'Note 1',
-    icon: 'https://picsum.photos/200/300',
-    content: 'Content 1'
-  }
-];
 
 export default function Home() {
   const dispatch = useDispatch();
   const notes = useSelector(({ note: { notes } }) => notes);
   const refNote = useRef();
 
-  const [chart, setChart] = useState(`graph TB
-  A[Kawhi Leonard]
-  B[College Basketball]
-  C[NBA Career]
-  
-  A --> B
-  A --> C`);
+  const [generateJsonData, setGenerateJsonData] = useState({});
 
   const handleCallApi = useCallback(async () => {
     const { payload } = await dispatch(demoCallApi());
@@ -51,9 +31,19 @@ export default function Home() {
   const [currentNote, setCurrentNote] = useState({});
   const [isShowMindmap, setShowMindmap] = useState(true);
   const handleChangeNote = async id => {
-    const { data } = await AxiosInstance.get(`/note/${id}`);
+    const { data } = await AxiosInstance.get(
+      `/note/${id}`,
+      currentNote.historyId
+        ? {
+            historyId: currentNote.historyId
+          }
+        : {}
+    );
+    console.log(data);
     setCurrentNote({
       ...data,
+      noteId: data.id,
+      historyId: currentNote.historyId || data.historyId,
       icon: 'https://picsum.photos/200/300'
     });
     setCurrentNoteId(data.id);
@@ -61,6 +51,7 @@ export default function Home() {
   const handleShowMindmap = () => {
     setShowMindmap(!isShowMindmap);
   };
+
   const handleCreateNewNote = async () => {
     const newNote = {
       name: `Note ${notes.length}`,
@@ -74,6 +65,7 @@ export default function Home() {
       setCurrentNoteId(data.id);
     }
   };
+
   const handleDeleteNote = async (e, id) => {
     // debugger;
     e.stopPropagation();
@@ -91,28 +83,31 @@ export default function Home() {
       dispatch(getNotes());
     }
   };
+
   const handleGenerateMindMap = useCallback(async () => {
     const { data } = await AxiosInstance.post('/note/generate', {
       content: refNote.current.getContent()
     });
 
     if (data.result) {
-      console.log(data.result);
-      setChart(data.result);
+      setGenerateJsonData(data.result);
     }
   }, []);
+
   const handleSaveNote = async () => {
-    const { error } = await AxiosInstance.put(`/note/${currentNoteId}`, {
-      content: refNote.current.getContent()
-    });
+    const { error } = await AxiosInstance.patch(
+      `/note`,
+      {
+        content: refNote.current.getContent()
+      },
+      {
+        params: { noteId: currentNote.noteId, historyId: currentNote.historyId }
+      }
+    );
     if (!error) {
       dispatch(getNotes());
     }
   };
-
-  useEffect(() => {
-    mermaid.contentLoaded();
-  }, [chart]);
 
   return (
     <div className="p-4 bg-gray-200 min-h-screen">
@@ -133,9 +128,11 @@ export default function Home() {
           onSave={handleSaveNote}
         />
 
-        <div className={s.reactFlowContainer}>
-          <MindMap />
-        </div>
+        {isShowMindmap && (
+          <div className={s.reactFlowContainer}>
+            <MindMap generateJsonData={generateJsonData} />
+          </div>
+        )}
       </div>
     </div>
   );
