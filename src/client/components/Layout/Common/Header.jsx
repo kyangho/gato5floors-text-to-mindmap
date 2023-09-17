@@ -1,4 +1,5 @@
 import { demoCallApi } from '@/redux/features/demo';
+import { cleanNote } from '@/redux/features/note';
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
@@ -63,6 +64,7 @@ export default function Header() {
     localStorage.removeItem('token');
     localStorage.removeItem('userToken');
     setAnchorElUser(null);
+    dispatch(cleanNote());
     navigate('/login');
   };
 

@@ -5,16 +5,14 @@ import Note from './components/Note';
 import { HistoryBar } from './components/HistoryBar';
 import { TaskBar } from './components/TaskBar';
 import AxiosInstance from '@/redux/axios';
-import mermaid from 'mermaid';
-import { getNotes } from '@/redux/features/note';
+import { fetchOneNote, fetchManyNotes } from '@/redux/features/note';
 import MindMap from './components/MindMap';
 import s from './index.module.less';
 
 export default function Home() {
   const dispatch = useDispatch();
-  const notes = useSelector(({ note: { notes } }) => notes);
+  const { notes, currentNote } = useSelector(({ note }) => note);
   const refNote = useRef();
-
   const [generateJsonData, setGenerateJsonData] = useState({});
 
   const handleCallApi = useCallback(async () => {
@@ -28,25 +26,17 @@ export default function Home() {
   });
 
   const [currentNoteId, setCurrentNoteId] = useState(0);
-  const [currentNote, setCurrentNote] = useState({});
   const [isShowMindmap, setShowMindmap] = useState(true);
+
   const handleChangeNote = async id => {
-    const { data } = await AxiosInstance.get(
-      `/note/${id}`,
-      currentNote.historyId
-        ? {
-            historyId: currentNote.historyId
-          }
-        : {}
+    await dispatch(
+      fetchOneNote({
+        id,
+        historyId: currentNote.historyId
+      })
     );
-    console.log(data);
-    setCurrentNote({
-      ...data,
-      noteId: data.id,
-      historyId: currentNote.historyId || data.historyId,
-      icon: 'https://picsum.photos/200/300'
-    });
-    setCurrentNoteId(data.id);
+    setGenerateJsonData(currentNote.mindmap);
+    setCurrentNoteId(id);
   };
   const handleShowMindmap = () => {
     setShowMindmap(!isShowMindmap);
@@ -60,7 +50,7 @@ export default function Home() {
     };
     const { data } = await AxiosInstance.post('/note', newNote);
     if (data) {
-      await dispatch(getNotes());
+      await dispatch(fetchManyNotes());
       console.log(data);
       setCurrentNoteId(data.id);
     }
@@ -80,13 +70,15 @@ export default function Home() {
       setCurrentNoteId(0);
     }
     if (!error) {
-      dispatch(getNotes());
+      dispatch(fetchManyNotes());
     }
   };
 
   const handleGenerateMindMap = useCallback(async () => {
     const { data } = await AxiosInstance.post('/note/generate', {
-      content: refNote.current.getContent()
+      content: refNote.current.getContent(),
+      id: currentNote.id,
+      historyId: currentNote.historyId
     });
 
     if (data.result) {
@@ -95,24 +87,19 @@ export default function Home() {
   }, []);
 
   const handleSaveNote = async () => {
-    const { error } = await AxiosInstance.patch(
-      `/note`,
-      {
-        content: refNote.current.getContent()
-      },
-      {
-        params: { noteId: currentNote.noteId, historyId: currentNote.historyId }
-      }
-    );
+    const { error } = await AxiosInstance.post(`/note/update`, {
+      noteId: currentNote.id,
+      historyId: currentNote.historyId,
+      content: refNote.current.getContent()
+    });
     if (!error) {
-      dispatch(getNotes());
+      dispatch(fetchManyNotes());
     }
   };
-
+  console.log(currentNote);
   return (
     <div className="p-4 bg-gray-200 min-h-screen">
       <HistoryBar
-        key={notes}
         onChangeNote={handleChangeNote}
         onCreateNewNote={handleCreateNewNote}
         onDeleteNote={handleDeleteNote}

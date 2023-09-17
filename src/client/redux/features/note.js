@@ -7,13 +7,12 @@ const initialState = {
   notes: []
 };
 
-export const getNotes = createAsyncThunk(
+export const fetchManyNotes = createAsyncThunk(
   '@user/get/notes',
   async (values, { rejectWithValue }) => {
     try {
       const { data } = await AxiosInstance.get('/note');
       if (data) {
-        console.log(data);
         return data;
       }
     } catch (_error) {
@@ -22,18 +21,45 @@ export const getNotes = createAsyncThunk(
   }
 );
 
-const { reducer } = createSlice({
+export const fetchOneNote = createAsyncThunk(
+  '@user/get/note',
+  async ({ id, historyId }, { rejectWithValue }) => {
+    try {
+      const { data } = await AxiosInstance.get(`/note/${id}`, { historyId });
+      return data;
+    } catch (_error) {
+      return rejectWithValue('Có lỗi xảy ra');
+    }
+  }
+);
+
+const { reducer, actions } = createSlice({
   initialState,
   name: 'note',
-  reducers: {},
+  reducers: {
+    cleanNote(state) {
+      state.currentNote = {};
+      state.notes = [];
+    }
+  },
   extraReducers: {
-    [getNotes.fulfilled]: (state, { error, payload }) => {
+    [fetchManyNotes.fulfilled]: (state, { error, payload }) => {
+      console.log(payload);
       state.notes = map(payload, note => ({
         ...note,
         icon: 'https://picsum.photos/200/300'
       }));
+    },
+    [fetchOneNote.fulfilled]: (state, { error, payload }) => {
+      state.currentNote = {
+        ...payload,
+        noteId: payload.id,
+        historyId: payload.historyId,
+        icon: 'https://picsum.photos/200/300'
+      };
     }
   }
 });
 
+export const { cleanNote } = actions;
 export default reducer;

@@ -31,7 +31,19 @@ function MindMapNode({ id, data }) {
   return (
     <>
       <div className="inputWrapper">
-        <div className="dragHandle">
+        <div
+          className="dragHandle"
+          style={{
+            backgroundColor: data.color,
+            height: 'calc(100% + 12px)',
+            marginTop: '-6px',
+            width: 25,
+            marginLeft: '-11px',
+            borderTopLeftRadius: 10,
+            borderBottomLeftRadius: 10,
+            justifyContent: 'center'
+          }}
+        >
           <DragIcon />
         </div>
         <input

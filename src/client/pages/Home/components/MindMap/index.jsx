@@ -104,12 +104,10 @@ function MindMap({ generateJsonData }) {
 
   useEffect(() => {
     if (!isEmpty(generateJsonData)) {
-      console.log(generateJsonData);
       const { edges, nodes } = convertToNodesAndEdges(generateJsonData);
       set({ edges, nodes });
     }
   }, [generateJsonData]);
-
   return (
     <ReactFlow
       nodes={nodes}

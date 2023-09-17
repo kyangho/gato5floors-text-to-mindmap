@@ -5,8 +5,9 @@ const History = require('../database/models/history.cjs');
 
 const { parseJwt } = require('../utils/jwtToken.cjs');
 const { last, find } = require('lodash');
+const Springy = require('../utils/springy.cjs');
 
-const getNotes = async (req, res) => {
+const fetchManyNotes = async (req, res) => {
   try {
     const parsedToken = parseJwt(req.headers.authorization);
     const user = await User.where({
@@ -20,8 +21,7 @@ const getNotes = async (req, res) => {
     const notes = await Note.where({ user_id: user.get('id') }).fetchAll({
       withRelated: ['history']
     });
-
-    res.status(200).json(notes);
+    res.status(200).json(notes.toJSON());
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -49,23 +49,26 @@ const getNoteById = async (req, res) => {
     let history = find(note.related('history').toJSON(), { id: historyId });
     if (history) {
       note = {
-        ...note,
+        ...note.toJSON(),
         historyId: history.id,
         content: history.content,
+        mindmap: history.mindmap,
         name: history.name
       };
     } else {
       history = last(note.related('history').toJSON());
       note = {
-        ...note,
+        ...note.toJSON(),
         historyId: history.id,
         content: history.content,
+        mindmap: history.mindmap,
         name: history.name
       };
     }
 
     res.status(200).json(note);
   } catch (error) {
+    console.log(error);
     res.status(404).json({ msg: error.message });
   }
 };
@@ -107,14 +110,14 @@ const createNote = async (req, res) => {
 };
 
 const updateNote = async (req, res) => {
-  const { noteId, historyId } = req.params;
-  const { name, content, mindmap } = req.body;
+  const { name, content, mindmap, noteId, historyId } = req.body;
   try {
     const parsedToken = parseJwt(req.headers.authorization);
 
     const user = await User.where({
       email: parsedToken.email
     }).fetch();
+
     if (!user) {
       res.status(404).json({ msg: 'Cannot not update note' });
       return;
@@ -124,6 +127,7 @@ const updateNote = async (req, res) => {
       id: noteId,
       user_id: user.get('id')
     }).fetch();
+
     if (!note) {
       res.status(404).json({ msg: 'Cannot find note' });
       return;
@@ -136,6 +140,7 @@ const updateNote = async (req, res) => {
 
     res.status(201).json(history);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ msg: error.message });
   }
 };
@@ -166,7 +171,7 @@ const deleteNote = async (req, res) => {
 
 const generateGraph = async (req, res) => {
   try {
-    const { content } = req.body;
+    const { content, id, historyId } = req.body;
     const { data } = await axios.post(
       'http://ai.g5t.tech/v1/generate',
       {
@@ -174,7 +179,33 @@ const generateGraph = async (req, res) => {
       },
       { timeout: 30000 }
     );
-    console.log(data);
+
+    const parsedToken = parseJwt(req.headers.authorization);
+
+    const user = await User.where({
+      email: parsedToken.email
+    }).fetch();
+
+    if (!user) {
+      res.status(404).json({ msg: 'Cannot not update note' });
+      return;
+    }
+
+    const note = await Note.where({
+      id,
+      user_id: user.get('id')
+    }).fetch();
+
+    if (!note) {
+      res.status(404).json({ msg: 'Cannot find note' });
+      return;
+    }
+
+    await History.forge({
+      id: historyId,
+      note_id: note.get('id')
+    }).save({ mindmap: data }, { method: 'update', patch: true });
+
     res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -183,7 +214,7 @@ const generateGraph = async (req, res) => {
 };
 
 module.exports = {
-  getNotes,
+  fetchManyNotes,
   getNoteById,
   createNote,
   updateNote,

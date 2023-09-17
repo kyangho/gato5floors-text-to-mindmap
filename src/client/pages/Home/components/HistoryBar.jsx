@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { HistoryItem } from './HistoryItem';
 import { AddNoteButton } from './button/AddNoteButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { getNotes } from '@/redux/features/note';
-import { map } from 'lodash';
+import { fetchManyNotes } from '@/redux/features/note';
+import { get, last, map } from 'lodash';
 
 export function HistoryBar({
   onChangeNote,
@@ -13,8 +13,13 @@ export function HistoryBar({
 }) {
   const dispatch = useDispatch();
   const notes = useSelector(({ note: { notes } }) => notes);
+
+  const handleGetNotes = useCallback(async () => {
+    await dispatch(fetchManyNotes());
+  }, []);
+
   useEffect(() => {
-    dispatch(getNotes());
+    handleGetNotes();
   }, []);
   return (
     <div className="fixed top-20 bottom-4 w-sidebar overflow-auto p-3 bg-white rounded-xl shadow-lg">
@@ -27,7 +32,7 @@ export function HistoryBar({
           <HistoryItem
             key={index}
             id={note.id}
-            title={note.name}
+            name={get(last(note.history), 'name')}
             icon="https://picsum.photos/200/300"
             onClick={onChangeNote}
             onDeleteNote={onDeleteNote}

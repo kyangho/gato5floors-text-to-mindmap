@@ -1,16 +1,18 @@
+import { get } from 'lodash';
 import { nanoid } from 'nanoid/non-secure';
-
+import { stringToColour } from './string.util';
 export function convertToNodesAndEdges(
   data,
   parentNode = null,
-  angle = 0,
-  radius = 0
+  angle = 120,
+  radius = 100,
+  color = ''
 ) {
   const nodes = [];
   const edges = [];
 
   // Calculate the label width for the current node
-  const labelWidth = data.name.length * 8; // Assuming 8 pixels per character
+  const labelWidth = data.name.length * 12; // Assuming 8 pixels per character
 
   // Calculate the x and y position for the current node
   const xPosition = parentNode
@@ -24,8 +26,15 @@ export function convertToNodesAndEdges(
   const currentNode = {
     id: nanoid(),
     type: 'mindmap',
-    data: { label: data.name },
-    position: { x: xPosition, y: yPosition },
+
+    data: {
+      label: data.name,
+      color: color ? color : stringToColour(data.name)
+    },
+    position: {
+      x: !parentNode ? 0 : get(data, 'position.x', xPosition),
+      y: !parentNode ? 0 : get(data, 'position.y', yPosition)
+    },
     dragHandle: '.dragHandle',
     parentNode: parentNode ? parentNode.id : null
   };
@@ -47,23 +56,24 @@ export function convertToNodesAndEdges(
 
   // Calculate the angle and radius for child nodes
   const childAngleStep =
-    (2 * Math.PI) / (data.children ? data.children.length : 1);
+    (8.5 * Math.PI) / (data.children ? data.children.length : 1);
   const childRadius = labelWidth; // Set radius based on label width
 
   // Recursively process children
   if (data.children) {
+    const color = stringToColour(data.children[0].name);
     data.children.forEach((child, index) => {
-      const childAngle = angle + index * childAngleStep;
+      const childAngle = angle * index * 0.4 + childAngleStep;
       const childNodesAndEdges = convertToNodesAndEdges(
         child,
         currentNode,
         childAngle,
-        childRadius
+        parentNode ? childRadius / 1.9 : 170,
+        color
       );
       nodes.push(...childNodesAndEdges.nodes);
       edges.push(...childNodesAndEdges.edges);
     });
   }
-
   return { nodes, edges };
 }
