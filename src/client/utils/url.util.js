@@ -6,7 +6,7 @@ export function getBaseUrl() {
       break;
     case 'development':
     default:
-      url = 'http://localhost:8080/api';
+      url = 'http://localhost:5000/api';
   }
   return url;
 }
