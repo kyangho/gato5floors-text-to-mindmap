@@ -3,7 +3,7 @@ export function getBaseUrl() {
   console.log(process.env.NODE_ENV);
   switch (process.env.NODE_ENV) {
     case 'server':
-      url = '/api';
+      url = 'http://ai.g5t.tech/api';
       break;
     case 'development':
     default:
