@@ -243,7 +243,7 @@ const generateGraph = async (req, res) => {
         ? 'http://localhost:3030/v1/generate'
         : 'http://ai.g5t.tech/v1/generate';
     const { data } = await axios.post(
-      baseAIUrl,
+      'http://localhost:3030/v1/generate',
       {
         note: content
       },
@@ -331,7 +331,7 @@ const generateCompletions = async (req, res) => {
         ? 'http://localhost:3030/v1/generate'
         : 'http://ai.g5t.tech/v1/generate';
     const { data } = await axios.post(
-      baseAIUrl,
+      'http://localhost:3030/v1/generate',
       {
         outline: JSON.stringify(convertNodesEdgesToTree(mindmap))
       },
