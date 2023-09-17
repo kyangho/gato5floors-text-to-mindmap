@@ -10,6 +10,7 @@ import Home from '@/pages/Home';
 import CommonLayout from '@/components/Layout/Common';
 import Login from '@/pages/Auth/Login';
 import Register from '@/pages/Auth/Register';
+import ViewOnlyNote from '@/pages/ViewAndShare/ViewOnlyNote';
 
 const AppRoutes = () => {
   const { locale } = useSelector(state => state.user);
@@ -49,6 +50,7 @@ const AppRoutes = () => {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/notes/:noteId" element={<ViewOnlyNote />}></Route>
 
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
