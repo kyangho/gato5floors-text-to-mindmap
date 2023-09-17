@@ -332,7 +332,6 @@ const generateCompletions = async (req, res) => {
         : 'http://ai.g5t.tech/v1/generate';
     const { data } = await axios.post(
       baseAIUrl,
-      'http://ai.g5t.tech/v1/completions',
       {
         outline: JSON.stringify(convertNodesEdgesToTree(mindmap))
       },
