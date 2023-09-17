@@ -38,8 +38,6 @@ export default function Header() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const handleCallApi = useCallback(async () => {
     const { payload } = await dispatch(demoCallApi());
-
-    console.log(payload);
   }, []);
 
   useEffect(() => {

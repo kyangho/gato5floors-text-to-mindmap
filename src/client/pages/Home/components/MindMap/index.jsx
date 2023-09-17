@@ -3,10 +3,8 @@ import ReactFlow, {
   ConnectionLineType,
   useReactFlow,
   useStoreApi,
-  Controls,
-  Panel
+  Controls
 } from 'reactflow';
-import shallow from 'zustand/shallow';
 
 import useStore from './store';
 import MindMapNode from './MindMapNode';
@@ -14,8 +12,7 @@ import MindMapEdge from './MindMapEdge';
 
 // we need to import the React Flow styles to make it work
 import 'reactflow/dist/style.css';
-import { isEmpty, isObject } from 'lodash';
-import { convertToNodesAndEdges } from '@/utils/mindmap.util';
+import { isEmpty } from 'lodash';
 
 const selector = state => ({
   nodes: state.nodes,
@@ -43,7 +40,7 @@ const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
 function MindMap({ generateJsonData }) {
   const store = useStoreApi();
   const { nodes, edges, onNodesChange, onEdgesChange, addChildNode, set, get } =
-    useStore(selector, shallow);
+    useStore(selector);
 
   const { project } = useReactFlow();
   const connectingNodeId = useRef(null);
@@ -103,10 +100,12 @@ function MindMap({ generateJsonData }) {
   );
 
   useEffect(() => {
-    if (!isEmpty(generateJsonData)) {
-      const { edges, nodes } = convertToNodesAndEdges(generateJsonData);
+    if (!isEmpty(generateJsonData) && generateJsonData) {
+      const { edges, nodes } = generateJsonData;
       set({ edges, nodes });
+      return;
     }
+    set({ edges: [], nodes: [] });
   }, [generateJsonData]);
   return (
     <ReactFlow

@@ -1,5 +1,8 @@
 import { join, isString } from 'lodash';
 export function stringToColour(str) {
+  if (!str) {
+    str = '';
+  }
   let hash = 0;
   str.split('').forEach(char => {
     hash = char.charCodeAt(0) + ((hash << 5) - hash);

@@ -1,13 +1,18 @@
-import { useLayoutEffect, useEffect, useRef } from 'react';
+import { useLayoutEffect, useEffect, useRef, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 
 import useStore from '../store';
 
 import DragIcon from './DragIcon';
+import RefIcon from './RefIcon';
 
 function MindMapNode({ id, data }) {
   const inputRef = useRef(null);
   const updateNodeLabel = useStore(state => state.updateNodeLabel);
+  if (!data.label) {
+    data.label = '';
+  }
+
   useEffect(() => {
     setTimeout(() => {
       inputRef.current?.focus({ preventScroll: true });
@@ -17,6 +22,7 @@ function MindMapNode({ id, data }) {
   useLayoutEffect(() => {
     if (inputRef.current) {
       let charWidth = 9;
+
       if (data.label.length < 3) {
         charWidth = 12;
       } else if (data.label.length < 14) {
@@ -30,7 +36,12 @@ function MindMapNode({ id, data }) {
 
   return (
     <>
-      <div className="inputWrapper">
+      <div
+        className="inputWrapper"
+        onFocus={e => {
+          console.log(e);
+        }}
+      >
         <div
           className="dragHandle"
           style={{
@@ -52,6 +63,19 @@ function MindMapNode({ id, data }) {
           className="input"
           ref={inputRef}
         />
+        <div
+          className="dragHandle"
+          style={{
+            height: 'calc(100% + 12px)',
+            marginTop: '-6px',
+            width: 25,
+            borderTopLeftRadius: 10,
+            borderBottomLeftRadius: 10,
+            justifyContent: 'center'
+          }}
+        >
+          <RefIcon />
+        </div>
       </div>
 
       <Handle type="target" position={Position.Top} />

@@ -38,7 +38,7 @@ const register = async (req, res) => {
       password,
       phone,
       email
-    }).save();
+    }).save({ method: 'insert' });
     res.status(201).json('Success');
   } catch (error) {
     res.status(400).json({ msg: error.message });

@@ -1,7 +1,8 @@
-import { get } from 'lodash';
-import { nanoid } from 'nanoid/non-secure';
-import { stringToColour } from './string.util';
-export function convertToNodesAndEdges(
+const { stringToColour } = require('./string.util.cjs');
+
+const { get, find, filter, map, isObject } = require('lodash');
+const { nanoid } = require('nanoid/non-secure');
+function convertToNodesAndEdges(
   data,
   parentNode = null,
   angle = 120,
@@ -11,8 +12,8 @@ export function convertToNodesAndEdges(
   const nodes = [];
   const edges = [];
 
-  // Calculate the label width for the current node
-  const labelWidth = data.name.length * 12; // Assuming 8 pixels per character
+  // Calculate the label width for the current nod
+  const labelWidth = get(data, 'name.length', 0) * 12; // Assuming 8 pixels per character
 
   // Calculate the x and y position for the current node
   const xPosition = parentNode
@@ -56,7 +57,7 @@ export function convertToNodesAndEdges(
 
   // Calculate the angle and radius for child nodes
   const childAngleStep =
-    (8.5 * Math.PI) / (data.children ? data.children.length : 1);
+    (8.5 * Math.PI) / (data.children ? get(data, 'children.length') : 1);
   const childRadius = labelWidth; // Set radius based on label width
 
   // Recursively process children
@@ -77,3 +78,42 @@ export function convertToNodesAndEdges(
   }
   return { nodes, edges };
 }
+
+function walkTree(root, nodes, edges) {
+  const filterEdges = filter(edges, { source: root.id });
+  root.children = map(filterEdges, edge => {
+    const foundNode = find(nodes, { id: edge.target });
+    if (foundNode)
+      return {
+        id: edge.target,
+        name: get(foundNode, 'data.label', ''),
+        children: []
+      };
+  }).filter(isObject);
+
+  for (let child of root.children) {
+    child = walkTree(child, nodes, edges);
+  }
+  delete root.id;
+  if (root.children.length === 0) {
+    delete root.children;
+  }
+  return root;
+}
+
+function convertNodesEdgesToTree({ nodes, edges }) {
+  let root = {};
+  const rootNode = find(nodes, { id: 'root' });
+
+  if (rootNode) {
+    root = {
+      id: 'root',
+      name: get(rootNode, 'data.label', ''),
+      children: []
+    };
+  }
+
+  return walkTree(root, nodes, edges);
+}
+
+module.exports = { convertToNodesAndEdges, convertNodesEdgesToTree };

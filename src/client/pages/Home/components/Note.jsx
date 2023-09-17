@@ -11,12 +11,11 @@ function Note({ note }, ref) {
   const [contextMenu, setContextMenu] = useState(null);
   const editorRef = useRef(null);
 
-  const handleGetContent = useCallback(() => {
-    return editorRef.current.getContent({ format: 'text' });
+  const handleGetContent = useCallback((config = {}) => {
+    if (editorRef.current) return editorRef.current.getContent(config);
   }, []);
   const handleContextMenu = event => {
     event.preventDefault();
-    console.log(event);
     setContextMenu(
       contextMenu === null
         ? {
@@ -31,7 +30,6 @@ function Note({ note }, ref) {
   };
 
   const handleClose = e => {
-    console.log(editorRef.current.selection.getContent({ format: 'text' }));
     setContextMenu(null);
   };
 
@@ -75,9 +73,7 @@ function Note({ note }, ref) {
             { title: 'Code', inline: 'code' },
             { title: 'Quote', block: 'blockquote' },
             { title: 'Callout', block: 'div', classes: 'call-out' }
-          ],
-          content_style:
-            "body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.4; margin: 3rem auto; max-width: 740px; } table { border-collapse: collapse; } table th, table td { border: 1px solid #ccc; padding: 0.4rem; } figure { display: table; margin: 1rem auto; } figure figcaption { color: #999; display: block; margin-top: 0.25rem; text-align: center; } hr { border-color: #ccc; border-style: solid; border-width: 1px 0 0 0; } code { background-color: #e8e8e8; border-radius: 3px; padding: 0.1rem 0.2rem; } img { max-width: 100%; } div.callout { border-radius: 4px; background-color: #f7f6f3; padding: 1rem 1rem 1rem 3rem; position: relative; } div.callout:before { content: '📣'; display: block; position: absolute; top: 1rem; left: 1rem; font-size: 20px; } .mce-content-body:not([dir=rtl]) blockquote { border-left: 2px solid #ccc; margin-left: 1.5rem; padding-left: 1rem; } .mce-content-body[dir=rtl] blockquote { border-right: 2px solid #ccc; margin-right: 1.5rem; padding-right: 1rem; }"
+          ]
         }}
         style={{ cursor: 'context-menu' }}
         onEditorChange={() => {}}

@@ -29,12 +29,15 @@ const createHistory = async (req, res) => {
   const { noteId } = req.params;
   const { name, content, mindmap } = req.body;
   try {
-    const note = await new History({
-      name,
-      content,
-      mindmap,
-      note_id: noteId
-    }).save();
+    const note = await new History().save(
+      {
+        name,
+        content,
+        mindmap,
+        note_id: noteId
+      },
+      { method: 'insert' }
+    );
 
     res.status(201).json(note);
   } catch (error) {
@@ -70,7 +73,6 @@ const deleteHistory = async (req, res) => {
 const generateGraph = async (req, res) => {
   try {
     const { content } = req.body;
-    console.log('a');
     const { data } = await axios.post(
       'https://a541-2401-d800-2e50-3b85-af36-2e1d-87b7-436a.ngrok-free.app/v1/generate',
       { note: content }

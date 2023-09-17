@@ -3,7 +3,7 @@ export function getBaseUrl() {
   console.log(process.env.NODE_ENV);
   switch (process.env.NODE_ENV) {
     case 'server':
-      url = '/api';
+      url = 'http://localhost:5000/api';
       break;
     case 'development':
     default:

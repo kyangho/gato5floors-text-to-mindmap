@@ -8,6 +8,7 @@ import AxiosInstance from '@/redux/axios';
 import { fetchOneNote, fetchManyNotes } from '@/redux/features/note';
 import MindMap from './components/MindMap';
 import s from './index.module.less';
+import useStore from './components/MindMap/store';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -15,29 +16,27 @@ export default function Home() {
   const refNote = useRef();
   const [generateJsonData, setGenerateJsonData] = useState({});
 
-  const handleCallApi = useCallback(async () => {
-    const { payload } = await dispatch(demoCallApi());
-
-    console.log(payload);
-  }, []);
-
-  useEffect(() => {
-    handleCallApi();
-  });
+  const { nodes, edges } = useStore(state => ({
+    nodes: state.nodes,
+    edges: state.edges
+  }));
 
   const [currentNoteId, setCurrentNoteId] = useState(0);
   const [isShowMindmap, setShowMindmap] = useState(true);
 
-  const handleChangeNote = async id => {
-    await dispatch(
-      fetchOneNote({
-        id,
-        historyId: currentNote.historyId
-      })
-    );
-    setGenerateJsonData(currentNote.mindmap);
-    setCurrentNoteId(id);
-  };
+  const handleChangeNote = useCallback(
+    async id => {
+      await dispatch(
+        fetchOneNote({
+          id,
+          historyId: currentNote.historyId
+        })
+      );
+      setGenerateJsonData(currentNote.mindmap);
+      setCurrentNoteId(id);
+    },
+    [currentNote.historyId, currentNote.mindmap]
+  );
   const handleShowMindmap = () => {
     setShowMindmap(!isShowMindmap);
   };
@@ -51,7 +50,6 @@ export default function Home() {
     const { data } = await AxiosInstance.post('/note', newNote);
     if (data) {
       await dispatch(fetchManyNotes());
-      console.log(data);
       setCurrentNoteId(data.id);
     }
   };
@@ -76,27 +74,47 @@ export default function Home() {
 
   const handleGenerateMindMap = useCallback(async () => {
     const { data } = await AxiosInstance.post('/note/generate', {
-      content: refNote.current.getContent(),
+      content: refNote.current.getContent({ format: 'text' }),
       id: currentNote.id,
       historyId: currentNote.historyId
     });
 
-    if (data.result) {
-      setGenerateJsonData(data.result);
+    if (data) {
+      setGenerateJsonData(data);
     }
-  }, []);
+  }, [currentNote]);
+
+  const handleGenerateFromMindMap = useCallback(async () => {
+    const { data } = await AxiosInstance.post('/note/completions', {
+      mindmap: { edges, nodes },
+      id: currentNote.id,
+      historyId: currentNote.historyId
+    });
+    console.log(data);
+    if (data) {
+      await dispatch(
+        fetchOneNote({
+          id: currentNote.id,
+          historyId: currentNote.historyId
+        })
+      );
+    }
+  }, [currentNote, edges, nodes]);
 
   const handleSaveNote = async () => {
     const { error } = await AxiosInstance.post(`/note/update`, {
       noteId: currentNote.id,
       historyId: currentNote.historyId,
-      content: refNote.current.getContent()
+      content: refNote.current.getContent(),
+      mindmap: {
+        nodes,
+        edges
+      }
     });
     if (!error) {
       dispatch(fetchManyNotes());
     }
   };
-  console.log(currentNote);
   return (
     <div className="p-4 bg-gray-200 min-h-screen">
       <HistoryBar
@@ -110,7 +128,7 @@ export default function Home() {
 
         <TaskBar
           onGenerate={handleGenerateMindMap}
-          isShowMindmap={isShowMindmap}
+          onGenerateFromMindMap={handleGenerateFromMindMap}
           onToggleMindmap={handleShowMindmap}
           onSave={handleSaveNote}
         />

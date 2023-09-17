@@ -356,7 +356,7 @@ ModelBase.prototype.visible = null;
 ModelBase.prototype.formatTimestamps = function formatTimestamps() {
   if (!this.hasTimestamps) return this;
 
-  this.getTimestampKeys().forEach((key) => {
+  this.getTimestampKeys().forEach(key => {
     if (this.get(key)) this.set(key, new Date(this.get(key)));
   });
 
@@ -524,7 +524,7 @@ ModelBase.prototype.serialize = function (options) {
   let attributes = Object.assign({}, this.attributes);
 
   if (options.shallow !== true) {
-    let relations = _.mapValues(this.relations, (relation) =>
+    let relations = _.mapValues(this.relations, relation =>
       relation.toJSON ? relation.toJSON(options) : relation
     );
     relations = _.omitBy(relations, _.isNull);
@@ -722,7 +722,7 @@ ModelBase.prototype.clone = function () {
   const model = new this.constructor(this.attributes);
   Object.assign(
     model.relations,
-    _.mapValues(this.relations, (r) => r.clone())
+    _.mapValues(this.relations, r => r.clone())
   );
   model._previousAttributes = _.clone(this._previousAttributes);
   model.changed = _.clone(this.changed);
